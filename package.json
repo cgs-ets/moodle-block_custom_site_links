@@ -1,0 +1,8 @@
+{
+       "name": "moodle-block_custom_site_links",
+       "devDependencies": {
+              "grunt": "^1.0.4",
+              "grunt-stylelint": "^0.11.1",
+              "stylelint": "^10.1.0"
+       }
+}
