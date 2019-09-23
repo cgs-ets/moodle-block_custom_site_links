@@ -41,3 +41,7 @@ $string['target'] = 'Target';
 $string['targetdesc'] = 'Open in new window';
 $string['numeric'] = 'You must enter a number here.';
 $string['arrayno'] = '{no}';
+$string['sorticonsalpha'] = 'Sort alphabetically';
+$string['sorticonsalpha_desc'] = 'This option will cause icon links to be sorted by label in alphabetical order. Individual link order set below will be ignored.';
+$string['sorttextalpha'] = 'Sort alphabetically';
+$string['sorttextalpha_desc'] = 'This option will cause text links to be sorted by label in alphabetical order.';

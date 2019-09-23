@@ -50,6 +50,14 @@ class block_custom_site_links_edit_form extends block_edit_form {
         ************************/
         $mform->addElement('header', 'configheader', get_string('iconlinksheader', 'block_custom_site_links'));
 
+        $type = 'advcheckbox';
+        $name = 'config_sorticonlinksalpha';
+        $label = get_string('sorticonsalpha', 'block_custom_site_links');
+        $label2 = get_string('sorticonsalpha_desc', 'block_custom_site_links');
+        $options = array();
+        $values = array(0, 1);
+        $mform->addElement($type, $name, $label, $label2, $options, $values);
+
         $repeatarray = array();
         $type = 'hidden';
         $name = 'config_iconlinkid';
@@ -149,6 +157,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinkcampus']['disabledif']  = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinkorder']['disabledif']   = array('config_iconlinkdelete', 'checked');
 
+        $repeatoptions['config_iconlinkorder']['hideif']   = array('config_sorticonlinksalpha', 'checked');
+
         $this->repeat_elements($repeatarray, $repeatcount, $repeatoptions, 'iconlink_repeats', 'iconlink_add_fields',
             1, get_string('addnewiconlink', 'block_custom_site_links'), true);
 
@@ -156,6 +166,14 @@ class block_custom_site_links_edit_form extends block_edit_form {
         * TEXT LINKS
         ************************/
         $mform->addElement('header', 'configheader', get_string('textlinksheader', 'block_custom_site_links'));
+
+        $type = 'advcheckbox';
+        $name = 'config_sorttextlinksalpha';
+        $label = get_string('sorttextalpha', 'block_custom_site_links');
+        $label2 = get_string('sorttextalpha_desc', 'block_custom_site_links');
+        $options = array();
+        $values = array(0, 1);
+        $mform->addElement($type, $name, $label, $label2, $options, $values);
 
         $repeatarray = array();
         $type = 'hidden';
@@ -248,6 +266,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinkcampus']['disabledif']   = array('config_textlinkdelete', 'checked');
         $repeatoptions['config_textlinkorder']['disabledif']   = array('config_textlinkdelete', 'checked');
 
+        $repeatoptions['config_textlinkorder']['hideif']   = array('config_sorttextlinksalpha', 'checked');
+
         $this->repeat_elements($repeatarray, $repeatcount, $repeatoptions, 'textlink_repeats', 'textlink_add_fields',
             1, get_string('addnewtextlink', 'block_custom_site_links'), true);
     }
@@ -275,8 +295,20 @@ class block_custom_site_links_edit_form extends block_edit_form {
                         $this->delete_array_element($data->config_iconlinkorder, $i);
                     }
                 }
+                // Dont need delete array anymore.
                 $data->config_iconlinkdelete = array();
+
+                // Reindex arrays.
+                $data->config_iconlinkid = array_values($data->config_iconlinkid);
+                $data->config_iconlinkimage = array_values($data->config_iconlinkimage);
+                $data->config_iconlinklabel = array_values($data->config_iconlinklabel);
+                $data->config_iconlinkurl = array_values($data->config_iconlinkurl);
+                $data->config_iconlinktarget = array_values($data->config_iconlinktarget);
+                $data->config_iconlinkroles = array_values($data->config_iconlinkroles);
+                $data->config_iconlinkcampus = array_values($data->config_iconlinkcampus);
+                $data->config_iconlinkorder = array_values($data->config_iconlinkorder);
             }
+
             // Remove deleted text links before saving data.
             if ( !empty($data->config_textlinkdelete) ) {
                 foreach ($data->config_textlinkdelete as $i => $del) {
@@ -290,28 +322,61 @@ class block_custom_site_links_edit_form extends block_edit_form {
                         $this->delete_array_element($data->config_textlinkorder, $i);
                     }
                 }
+                // Dont need delete array anymore.
                 $data->config_textlinkdelete = array();
+
+                // Reindex arrays.
+                $data->config_textlinkid = array_values($data->config_textlinkid);
+                $data->config_textlinklabel = array_values($data->config_textlinklabel);
+                $data->config_textlinkurl = array_values($data->config_textlinkurl);
+                $data->config_textlinktarget = array_values($data->config_textlinktarget);
+                $data->config_textlinkroles = array_values($data->config_textlinkroles);
+                $data->config_textlinkcampus = array_values($data->config_textlinkcampus);
+                $data->config_textlinkorder = array_values($data->config_textlinkorder);
             }
 
-            // Reordering.
-            $order = array_flip($data->config_iconlinkorder);
-            $this->reorder_by_array($data->config_iconlinkid, $order);
-            $this->reorder_by_array($data->config_iconlinkimage, $order);
-            $this->reorder_by_array($data->config_iconlinklabel, $order);
-            $this->reorder_by_array($data->config_iconlinkurl, $order);
-            $this->reorder_by_array($data->config_iconlinktarget, $order);
-            $this->reorder_by_array($data->config_iconlinkroles, $order);
-            $this->reorder_by_array($data->config_iconlinkcampus, $order);
-            $this->reorder_by_array($data->config_iconlinkorder, $order);
+            // Reordering icon links.
+            $order = array();
+            if ($data->config_sorticonlinksalpha) {
+                $order = $data->config_iconlinklabel;
+                $this->resequence_array($order);
+                $data->config_iconlinkorder = $order;
+                $order = array_flip($data->config_iconlinkorder);
+            } else {
+                $this->resequence_array($data->config_iconlinkorder);
+                $order = array_flip($data->config_iconlinkorder);
+            }
+            if (!empty($order)) {
+                $this->reorder_by_array($data->config_iconlinkid, $order);
+                $this->reorder_by_array($data->config_iconlinkimage, $order);
+                $this->reorder_by_array($data->config_iconlinklabel, $order);
+                $this->reorder_by_array($data->config_iconlinkurl, $order);
+                $this->reorder_by_array($data->config_iconlinktarget, $order);
+                $this->reorder_by_array($data->config_iconlinkroles, $order);
+                $this->reorder_by_array($data->config_iconlinkcampus, $order);
+                $this->reorder_by_array($data->config_iconlinkorder, $order);
+            }
 
-            $order = array_flip($data->config_textlinkorder);
-            $this->reorder_by_array($data->config_textlinkid, $order);
-            $this->reorder_by_array($data->config_textlinklabel, $order);
-            $this->reorder_by_array($data->config_textlinkurl, $order);
-            $this->reorder_by_array($data->config_textlinktarget, $order);
-            $this->reorder_by_array($data->config_textlinkroles, $order);
-            $this->reorder_by_array($data->config_textlinkcampus, $order);
-            $this->reorder_by_array($data->config_textlinkorder, $order);
+            // Reordering text links.
+            $order = array();
+            if ($data->config_sorttextlinksalpha) {
+                $order = $data->config_textlinklabel;
+                $this->resequence_array($order);
+                $data->config_textlinkorder = $order;
+                $order = array_flip($data->config_textlinkorder);
+            } else {
+                $this->resequence_array($data->config_textlinkorder);
+                $order = array_flip($data->config_textlinkorder);
+            }
+            if (!empty($order)) {
+                $this->reorder_by_array($data->config_textlinkid, $order);
+                $this->reorder_by_array($data->config_textlinklabel, $order);
+                $this->reorder_by_array($data->config_textlinkurl, $order);
+                $this->reorder_by_array($data->config_textlinktarget, $order);
+                $this->reorder_by_array($data->config_textlinkroles, $order);
+                $this->reorder_by_array($data->config_textlinkcampus, $order);
+                $this->reorder_by_array($data->config_textlinkorder, $order);
+            }
 
             // Save images.
             if ( !empty($data->config_iconlinkimage) ) {
@@ -399,7 +464,9 @@ class block_custom_site_links_edit_form extends block_edit_form {
         // Unset element and shuffle everything down.
         if (isset($array[$index])) {
             unset($array[$index]);
-            $array = array_values($array);
+        }
+        if (empty($array)) {
+            $array = array();
         }
     }
 
@@ -415,6 +482,24 @@ class block_custom_site_links_edit_form extends block_edit_form {
             return (array_search($key1, $order) > array_search($key2, $order));
         });
         $array = array_values($array);
+    }
+
+
+    /**
+     * Helper to ensure order has unique sequence.
+     *
+     * @param array $array
+     * @return void
+     */
+    private function resequence_array(&$array) {
+        asort($array);
+        $i = 1;
+        foreach ($array as $key => $val) {
+            $array[$key] = $i;
+            $i++;
+        }
+        ksort($array);
+        return $array;
     }
 
 }
