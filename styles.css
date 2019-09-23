@@ -16,7 +16,7 @@
     margin: 0 -1px -1px 0;
 }
 .block_custom_site_links .icon-button-grid {
-    font-size: 11px;
+    font-size: 9px;
     font-family: "Open Sans", sans-serif;
     font-weight: 600;
     line-height: 20px;
@@ -61,7 +61,7 @@
     font-weight: 600;
     letter-spacing: 0.5px;
     overflow: hidden;
-    padding: 15px 7px;
+    padding: 5px 7px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
