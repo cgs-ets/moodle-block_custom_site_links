@@ -57,6 +57,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $options = array();
         $values = array(0, 1);
         $mform->addElement($type, $name, $label, $label2, $options, $values);
+        $mform->setDefault('config_sorticonlinksalpha', 1); // On by default.
 
         $repeatarray = array();
         $type = 'hidden';
@@ -174,6 +175,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $options = array();
         $values = array(0, 1);
         $mform->addElement($type, $name, $label, $label2, $options, $values);
+        $mform->setDefault('config_sorttextlinksalpha', 1); // On by default.
 
         $repeatarray = array();
         $type = 'hidden';
