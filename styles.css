@@ -1,3 +1,9 @@
+.block_custom_site_links .card-title {
+    display: none;
+}
+.block_custom_site_links.block_with_controls .card-title {
+    display: block;
+}
 .block_custom_site_links .iconcolumn {
     text-transform: uppercase;
     width: 100%;

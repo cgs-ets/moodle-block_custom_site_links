@@ -36,7 +36,7 @@ class block_custom_site_links extends block_base {
      * Core function used to initialize the block.
      */
     public function init() {
-        $this->title = '';
+        $this->title = get_string('title', 'block_custom_site_links');
     }
 
     /**
