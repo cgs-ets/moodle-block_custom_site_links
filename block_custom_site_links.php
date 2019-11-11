@@ -124,12 +124,12 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $linkroles = $this->config->iconlinkroles[$i];
+                $linkroles = $this->config->iconlinkcampusroles[$i];
                 $linkrolesarr = array_map('trim', explode(',', $linkroles));
                 $rolesallowed = array_intersect($userroles, $linkrolesarr);
                 $pregmatch = false;
                 foreach ($linkrolesarr as $reg) {
-                    if (preg_match("/" . $reg . "/i", $userroles) === 1) {
+                    if ($reg && preg_match("/" . $reg . "/i", $userroles) === 1) {
                         $pregmatch = true;
                         break;
                     }
@@ -154,12 +154,12 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $linkroles = $this->config->textlinkroles[$i];
+                $linkroles = $this->config->textlinkcampusroles[$i];
                 $linkrolesarr = array_map('trim', explode(',', $linkroles));
                 $rolesallowed = array_intersect($userroles, $linkrolesarr);
                 $pregmatch = false;
                 foreach ($linkrolesarr as $reg) {
-                    if (preg_match("/" . $reg . "/i", $userroles) === 1) {
+                    if ($reg && preg_match("/" . $reg . "/i", $userroles) === 1) {
                         $pregmatch = true;
                         break;
                     }
