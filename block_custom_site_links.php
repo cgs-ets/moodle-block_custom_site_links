@@ -124,8 +124,9 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $rolesallowed = array_intersect($userroles, explode(',', $this->config->iconlinkroles[$i]));
-                if (($rolesallowed) || is_siteadmin()) {
+                $linkroles = $this->config->iconlinkroles[$i];
+                $rolesallowed = array_intersect($userroles, explode(',', $linkroles));
+                if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
 
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
@@ -146,8 +147,9 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
+                $linkroles = $this->config->textlinkroles[$i];
                 $rolesallowed = array_intersect($userroles, explode(',', $this->config->textlinkroles[$i]));
-                if (($rolesallowed) || is_siteadmin()) {
+                if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
 
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
