@@ -98,6 +98,18 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
         $type = 'text';
+        $name = 'config_iconlinkcampus';
+        $label = get_string('campus', 'block_custom_site_links');
+        $options = array('size' => '50');
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+
+        $type = 'text';
+        $name = 'config_iconlinkcampusroles';
+        $label = get_string('roles', 'block_custom_site_links');
+        $options = array('size' => '50');
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+
+        $type = 'text';
         $name = 'config_iconlinkorder';
         $label = get_string('order');
         $options = array('size' => '10');
@@ -130,6 +142,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinkurl']['type']    = PARAM_RAW;
         $repeatoptions['config_iconlinktarget']['type'] = PARAM_INT;
         $repeatoptions['config_iconlinkroles']['type']  = PARAM_RAW;
+        $repeatoptions['config_iconlinkcampus']['type']  = PARAM_RAW;
+        $repeatoptions['config_iconlinkcampusroles']['type']  = PARAM_RAW;
         $repeatoptions['config_iconlinkorder']['type']  = PARAM_INT;
         $repeatoptions['config_iconlinkdelete']['type'] = PARAM_INT;
 
@@ -139,6 +153,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinklabel']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinkurl']['rule']    = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinkroles']['rule']  = array(get_string('required'), 'required', null, 'server');
+        $repeatoptions['config_iconlinkcampus']['rule']  = array(get_string('required'), 'required', null, 'server');
+        $repeatoptions['config_iconlinkcampusroles']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinkorder']['rule']  = array(get_string('numeric', 'block_custom_site_links'),
             'numeric', null, 'client');
 
@@ -147,6 +163,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinkurl']['disabledif']     = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinktarget']['disabledif']  = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinkroles']['disabledif']   = array('config_iconlinkdelete', 'checked');
+        $repeatoptions['config_iconlinkcampus']['disabledif']   = array('config_iconlinkdelete', 'checked');
+        $repeatoptions['config_iconlinkcampusroles']['disabledif']   = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinkorder']['disabledif']   = array('config_iconlinkdelete', 'checked');
 
         $repeatoptions['config_iconlinkorder']['hideif']   = array('config_sorticonlinksalpha', 'checked');
@@ -201,6 +219,18 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
         $type = 'text';
+        $name = 'config_textlinkcampus';
+        $label = get_string('campus', 'block_custom_site_links');
+        $options = array('size' => '50');
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+
+        $type = 'text';
+        $name = 'config_textlinkcampusroles';
+        $label = get_string('roles', 'block_custom_site_links');
+        $options = array('size' => '50');
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+
+        $type = 'text';
         $name = 'config_textlinkorder';
         $label = get_string('order');
         $options = array('size' => '10');
@@ -233,6 +263,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinkurl']['type']    = PARAM_RAW;
         $repeatoptions['config_textlinktarget']['type'] = PARAM_INT;
         $repeatoptions['config_textlinkroles']['type']  = PARAM_RAW;
+        $repeatoptions['config_textlinkcampus']['type']  = PARAM_RAW;
+        $repeatoptions['config_textlinkcampusroles']['type']  = PARAM_RAW;
         $repeatoptions['config_textlinkorder']['type']  = PARAM_INT;
         $repeatoptions['config_textlinkdelete']['type'] = PARAM_INT;
 
@@ -241,6 +273,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinklabel']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkurl']['rule']    = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkroles']['rule']  = array(get_string('required'), 'required', null, 'server');
+        $repeatoptions['config_textlinkcampus']['rule']  = array(get_string('required'), 'required', null, 'server');
+        $repeatoptions['config_textlinkcampusroles']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkorder']['rule']  = array(get_string('numeric', 'block_custom_site_links'),
             'numeric', null, 'client');
 
@@ -248,6 +282,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinkurl']['disabledif']      = array('config_textlinkdelete', 'checked');
         $repeatoptions['config_textlinktarget']['disabledif']   = array('config_textlinkdelete', 'checked');
         $repeatoptions['config_textlinkroles']['disabledif']    = array('config_textlinkdelete', 'checked');
+        $repeatoptions['config_textlinkcampus']['disabledif']    = array('config_textlinkdelete', 'checked');
+        $repeatoptions['config_textlinkcampusroles']['disabledif']    = array('config_textlinkdelete', 'checked');
         $repeatoptions['config_textlinkorder']['disabledif']   = array('config_textlinkdelete', 'checked');
 
         $repeatoptions['config_textlinkorder']['hideif']   = array('config_sorttextlinksalpha', 'checked');
@@ -275,6 +311,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                         $this->delete_array_element($data->config_iconlinkurl, $i);
                         $this->delete_array_element($data->config_iconlinktarget, $i);
                         $this->delete_array_element($data->config_iconlinkroles, $i);
+                        $this->delete_array_element($data->config_iconlinkcampus, $i);
+                        $this->delete_array_element($data->config_iconlinkcampusroles, $i);
                         $this->delete_array_element($data->config_iconlinkorder, $i);
                     }
                 }
@@ -288,6 +326,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 $data->config_iconlinkurl = array_values($data->config_iconlinkurl);
                 $data->config_iconlinktarget = array_values($data->config_iconlinktarget);
                 $data->config_iconlinkroles = array_values($data->config_iconlinkroles);
+                $data->config_iconlinkcampus = array_values($data->config_iconlinkcampus);
+                $data->config_iconlinkcampusroles = array_values($data->config_iconlinkcampusroles);
                 $data->config_iconlinkorder = array_values($data->config_iconlinkorder);
             }
 
@@ -300,6 +340,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                         $this->delete_array_element($data->config_textlinkurl, $i);
                         $this->delete_array_element($data->config_textlinktarget, $i);
                         $this->delete_array_element($data->config_textlinkroles, $i);
+                        $this->delete_array_element($data->config_textlinkcampus, $i);
+                        $this->delete_array_element($data->config_textlinkcampusroles, $i);
                         $this->delete_array_element($data->config_textlinkorder, $i);
                     }
                 }
@@ -312,6 +354,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 $data->config_textlinkurl = array_values($data->config_textlinkurl);
                 $data->config_textlinktarget = array_values($data->config_textlinktarget);
                 $data->config_textlinkroles = array_values($data->config_textlinkroles);
+                $data->config_textlinkcampus = array_values($data->config_textlinkcampus);
+                $data->config_textlinkcampusroles = array_values($data->config_textlinkcampusroles);
                 $data->config_textlinkorder = array_values($data->config_textlinkorder);
             }
 
@@ -333,6 +377,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 $this->reorder_by_array($data->config_iconlinkurl, $order);
                 $this->reorder_by_array($data->config_iconlinktarget, $order);
                 $this->reorder_by_array($data->config_iconlinkroles, $order);
+                $this->reorder_by_array($data->config_iconlinkcampus, $order);
+                $this->reorder_by_array($data->config_iconlinkcampusroles, $order);
                 $this->reorder_by_array($data->config_iconlinkorder, $order);
             }
 
@@ -353,6 +399,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 $this->reorder_by_array($data->config_textlinkurl, $order);
                 $this->reorder_by_array($data->config_textlinktarget, $order);
                 $this->reorder_by_array($data->config_textlinkroles, $order);
+                $this->reorder_by_array($data->config_textlinkcampus, $order);
+                $this->reorder_by_array($data->config_textlinkcampusroles, $order);
                 $this->reorder_by_array($data->config_textlinkorder, $order);
             }
 
@@ -412,6 +460,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 unset($this->_form->_rules["config_iconlinklabel[${i}]"]);
                 unset($this->_form->_rules["config_iconlinkurl[${i}]"]);
                 unset($this->_form->_rules["config_iconlinkroles[${i}]"]);
+                unset($this->_form->_rules["config_iconlinkcampus[${i}]"]);
+                unset($this->_form->_rules["config_iconlinkcampusroles[${i}]"]);
                 unset($this->_form->_rules["config_iconlinkimage[${i}]"]);
             }
         }
@@ -425,6 +475,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 unset($this->_form->_rules["config_textlinklabel[${i}]"]);
                 unset($this->_form->_rules["config_textlinkurl[${i}]"]);
                 unset($this->_form->_rules["config_textlinkroles[${i}]"]);
+                unset($this->_form->_rules["config_textlinkcampus[${i}]"]);
+                unset($this->_form->_rules["config_textlinkcampusroles[${i}]"]);
             }
         }
     }
