@@ -85,15 +85,11 @@ class block_custom_site_links extends block_base {
     public function get_content() {
         global $USER, $OUTPUT;
 
-        // Determing which user role and campus we are rendering to.
-        // This block assumes users have custom profile fields for Campus and ConstitCode.
-        $userconstits = [];
-        if (isset($USER->profile['ConstitCodes'])) {
-            $userconstits = explode(',', $USER->profile['ConstitCodes']);
-        }
-        $usercampuses = [];
-        if (isset($USER->profile['Campus'])) {
-            $usercampuses = explode(',', $USER->profile['Campus']);
+        // Determing which user role we are rendering to.
+        // This block assumes users have custom profile fields for CampusRoles.
+        $userroles = array();
+        if (isset($USER->profile['CampusRoles'])) {
+            $userroles = explode(',', $USER->profile['CampusRoles']);
         }
 
         // If content has already been generated, don't waste time generating it again.
@@ -128,9 +124,8 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $roleallowed = array_intersect($userconstits, explode(',', $this->config->iconlinkroles[$i]));
-                $campusallowed = array_intersect($usercampuses, explode(',', $this->config->iconlinkcampus[$i]));
-                if (($roleallowed && $campusallowed) || is_siteadmin()) {
+                $rolesallowed = array_intersect($userroles, explode(',', $this->config->iconlinkroles[$i]));
+                if (($rolesallowed) || is_siteadmin()) {
 
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
@@ -151,9 +146,8 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $roleallowed = array_intersect($userconstits, explode(',', $this->config->textlinkroles[$i]));
-                $campusallowed = array_intersect($usercampuses, explode(',', $this->config->textlinkcampus[$i]));
-                if (($roleallowed && $campusallowed) || is_siteadmin()) {
+                $rolesallowed = array_intersect($userroles, explode(',', $this->config->textlinkroles[$i]));
+                if (($rolesallowed) || is_siteadmin()) {
 
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';

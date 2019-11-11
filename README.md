@@ -1,7 +1,7 @@
 # Custom site links block for Moodle
 [![Build Status](https://travis-ci.org/cgs-ets/moodle-block_custom_site_links.svg?branch=master)](https://travis-ci.org/cgs-ets/moodle-block_custom_site_links)
 
-This block displays a responsive list of icon and text links with visibility filtering based on "Campus" and "ConstitCodes" custom profile fields. Configuration allows adding, deleting and re-ording of links. This block can be added to the Site home page.
+This block displays a responsive list of icon and text links with visibility filtering based on "CampusRoles" custom profile field. Configuration allows adding, deleting and re-ording of links. This block can be added to the Site home page.
 
 Author
 --------
