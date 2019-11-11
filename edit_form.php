@@ -49,14 +49,16 @@ class block_custom_site_links_edit_form extends block_edit_form {
         * ICON LINKS
         ************************/
         $mform->addElement('header', 'configheader', get_string('iconlinksheader', 'block_custom_site_links'));
+        $mform->addElement('static', 'rolesdesc', '', get_string('roles_desc', 'block_custom_site_links'));
+
 
         $type = 'advcheckbox';
         $name = 'config_sorticonlinksalpha';
         $label = get_string('sorticonsalpha', 'block_custom_site_links');
-        $label2 = get_string('sorticonsalpha_desc', 'block_custom_site_links');
+        $desc = get_string('sorticonsalpha_desc', 'block_custom_site_links');
         $options = array();
         $values = array(0, 1);
-        $mform->addElement($type, $name, $label, $label2, $options, $values);
+        $mform->addElement($type, $name, $label, $desc, $options, $values);
         $mform->setDefault('config_sorticonlinksalpha', 1); // On by default.
 
         $repeatarray = array();
@@ -86,10 +88,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'advcheckbox';
         $name = 'config_iconlinktarget';
         $label = get_string('target', 'block_custom_site_links');
-        $label2 = get_string('targetdesc', 'block_custom_site_links');
+        $desc = get_string('targetdesc', 'block_custom_site_links');
         $options = array();
         $values = array(0, 1);
-        $repeatarray[] = &$mform->createElement($type, $name, $label, $label2, $options, $values);
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $desc, $options, $values);
 
         $type = 'text';
         $name = 'config_iconlinkroles';
@@ -106,8 +108,9 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'text';
         $name = 'config_iconlinkcampusroles';
         $label = get_string('roles', 'block_custom_site_links');
+        $desc = get_string('roles_desc', 'block_custom_site_links');
         $options = array('size' => '50');
-        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $desc, $options);
 
         $type = 'text';
         $name = 'config_iconlinkorder';
@@ -118,10 +121,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'advcheckbox';
         $name = 'config_iconlinkdelete';
         $label = get_string('delete');
-        $label2 = get_string('deletedesc', 'block_custom_site_links');
+        $desc = get_string('deletedesc', 'block_custom_site_links');
         $options = array();
         $value = array(0, 1);
-        $repeatarray[] = &$mform->createElement($type, $name, $label, $label2, $options, $values);
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $desc, $options, $values);
 
         $type = 'html';
         $value = '<br/><br/>';
@@ -143,7 +146,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinktarget']['type'] = PARAM_INT;
         $repeatoptions['config_iconlinkroles']['type']  = PARAM_RAW;
         $repeatoptions['config_iconlinkcampus']['type']  = PARAM_RAW;
-        $repeatoptions['config_iconlinkcampusroles']['type']  = PARAM_RAW;
+        $repeatoptions['config_iconlinkcampusroles']['type']  = PARAM_TEXT;
         $repeatoptions['config_iconlinkorder']['type']  = PARAM_INT;
         $repeatoptions['config_iconlinkdelete']['type'] = PARAM_INT;
 
@@ -180,10 +183,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'advcheckbox';
         $name = 'config_sorttextlinksalpha';
         $label = get_string('sorttextalpha', 'block_custom_site_links');
-        $label2 = get_string('sorttextalpha_desc', 'block_custom_site_links');
+        $desc = get_string('sorttextalpha_desc', 'block_custom_site_links');
         $options = array();
         $values = array(0, 1);
-        $mform->addElement($type, $name, $label, $label2, $options, $values);
+        $mform->addElement($type, $name, $label, $desc, $options, $values);
         $mform->setDefault('config_sorttextlinksalpha', 1); // On by default.
 
         $repeatarray = array();
@@ -207,10 +210,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'advcheckbox';
         $name = 'config_textlinktarget';
         $label = get_string('target', 'block_custom_site_links');
-        $label2 = get_string('targetdesc', 'block_custom_site_links');
+        $desc = get_string('targetdesc', 'block_custom_site_links');
         $options = array();
         $values = array(0, 1);
-        $repeatarray[] = &$mform->createElement($type, $name, $label, $label2, $options, $values);
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $desc, $options, $values);
 
         $type = 'text';
         $name = 'config_textlinkroles';
@@ -239,10 +242,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'advcheckbox';
         $name = 'config_textlinkdelete';
         $label = get_string('delete');
-        $label2 = get_string('deletedesc', 'block_custom_site_links');
+        $desc = get_string('deletedesc', 'block_custom_site_links');
         $options = array();
         $value = array(0, 1);
-        $repeatarray[] = &$mform->createElement($type, $name, $label, $label2, $options, $values);
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $desc, $options, $values);
 
         $type = 'html';
         $value = '<br/><br/>';
@@ -264,7 +267,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinktarget']['type'] = PARAM_INT;
         $repeatoptions['config_textlinkroles']['type']  = PARAM_RAW;
         $repeatoptions['config_textlinkcampus']['type']  = PARAM_RAW;
-        $repeatoptions['config_textlinkcampusroles']['type']  = PARAM_RAW;
+        $repeatoptions['config_textlinkcampusroles']['type']  = PARAM_TEXT;
         $repeatoptions['config_textlinkorder']['type']  = PARAM_INT;
         $repeatoptions['config_textlinkdelete']['type'] = PARAM_INT;
 
