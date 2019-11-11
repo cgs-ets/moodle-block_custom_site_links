@@ -125,10 +125,16 @@ class block_custom_site_links extends block_base {
                     continue;
                 }
                 $linkroles = $this->config->iconlinkroles[$i];
-                $rolesallowed = array_intersect($userroles, explode(',', $linkroles));
-                $pregmatch = (preg_match("/" . $linkroles . "/i", $userroles) === 1);
+                $linkrolesarr = array_map('trim', explode(',', $linkroles));
+                $rolesallowed = array_intersect($userroles, $linkrolesarr);
+                $pregmatch = false;
+                foreach ($linkrolesarr as $reg) {
+                    if (preg_match("/" . $reg . "/i", $userroles) === 1) {
+                        $pregmatch = true;
+                        break;
+                    }
+                }
                 if ($linkroles == "*" || $rolesallowed || $pregmatch || is_siteadmin()) {
-
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
                     $target = isset($this->config->iconlinktarget[$i]) ? $this->config->iconlinktarget[$i] : '';
@@ -149,10 +155,16 @@ class block_custom_site_links extends block_base {
                     continue;
                 }
                 $linkroles = $this->config->textlinkroles[$i];
-                $rolesallowed = array_intersect($userroles, explode(',', $this->config->textlinkroles[$i]));
-                $pregmatch = (preg_match("/" . $linkroles . "/i", $userroles) === 1);
+                $linkrolesarr = array_map('trim', explode(',', $linkroles));
+                $rolesallowed = array_intersect($userroles, $linkrolesarr);
+                $pregmatch = false;
+                foreach ($linkrolesarr as $reg) {
+                    if (preg_match("/" . $reg . "/i", $userroles) === 1) {
+                        $pregmatch = true;
+                        break;
+                    }
+                }
                 if ($linkroles == "*" || $rolesallowed || $pregmatch || is_siteadmin()) {
-
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
                     $target = isset($this->config->textlinktarget[$i]) ? $this->config->textlinktarget[$i] : '';
