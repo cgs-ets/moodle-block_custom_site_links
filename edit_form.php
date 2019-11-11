@@ -108,9 +108,8 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $type = 'text';
         $name = 'config_iconlinkcampusroles';
         $label = get_string('roles', 'block_custom_site_links');
-        $desc = get_string('roles_desc', 'block_custom_site_links');
         $options = array('size' => '50');
-        $repeatarray[] = &$mform->createElement($type, $name, $label, $desc, $options);
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
         $type = 'text';
         $name = 'config_iconlinkorder';
