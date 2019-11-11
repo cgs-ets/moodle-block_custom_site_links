@@ -88,8 +88,10 @@ class block_custom_site_links extends block_base {
         // Determing which user role we are rendering to.
         // This block assumes users have custom profile fields for CampusRoles.
         $userroles = array();
+        $userrolesstr = '';
         if (isset($USER->profile['CampusRoles'])) {
-            $userroles = explode(',', $USER->profile['CampusRoles']);
+            $userrolesstr = $USER->profile['CampusRoles'];
+            $userroles = explode(',', $userrolesstr);
         }
 
         // If content has already been generated, don't waste time generating it again.
@@ -129,7 +131,8 @@ class block_custom_site_links extends block_base {
                 $rolesallowed = array_intersect($userroles, $linkrolesarr);
                 $pregmatch = false;
                 foreach ($linkrolesarr as $reg) {
-                    if ($reg && preg_match("/" . $reg . "/i", $userroles) === 1) {
+                    $regex = "/${reg}/i";
+                    if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
                         $pregmatch = true;
                         break;
                     }
@@ -159,7 +162,8 @@ class block_custom_site_links extends block_base {
                 $rolesallowed = array_intersect($userroles, $linkrolesarr);
                 $pregmatch = false;
                 foreach ($linkrolesarr as $reg) {
-                    if ($reg && preg_match("/" . $reg . "/i", $userroles) === 1) {
+                    $regex = "/${reg}/i";
+                    if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
                         $pregmatch = true;
                         break;
                     }
