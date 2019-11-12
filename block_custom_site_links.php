@@ -88,10 +88,8 @@ class block_custom_site_links extends block_base {
         // Determing which user role we are rendering to.
         // This block assumes users have custom profile fields for CampusRoles.
         $userroles = array();
-        $userrolesstr = '';
         if (isset($USER->profile['CampusRoles'])) {
-            $userrolesstr = $USER->profile['CampusRoles'];
-            $userroles = explode(',', $userrolesstr);
+            $userroles = explode(',', $USER->profile['CampusRoles']);
         }
 
         // If content has already been generated, don't waste time generating it again.
@@ -126,22 +124,11 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $linkroles = $this->config->iconlinkcampusroles[$i];
-                $linkrolesarr = array_map('trim', explode(',', $linkroles));
-                $rolesallowed = array_intersect($userroles, $linkrolesarr);
-                $pregmatch = false;
-                foreach ($linkrolesarr as $reg) {
-                    $regex = "/${reg}/i";
-                    if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
-                        $pregmatch = true;
-                        break;
-                    }
-                }
-                if ($linkroles == "*" || $rolesallowed || $pregmatch || is_siteadmin()) {
+                $allowed = $this->checkallowed($this->config->iconlinkcampusroles[$i], $userroles);
+                if ($allowed) {
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
                     $target = isset($this->config->iconlinktarget[$i]) ? $this->config->iconlinktarget[$i] : '';
-
                     $data['iconlinks'][] = [
                         'icon' => $icon,
                         'label' => $label,
@@ -157,22 +144,11 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $linkroles = $this->config->textlinkcampusroles[$i];
-                $linkrolesarr = array_map('trim', explode(',', $linkroles));
-                $rolesallowed = array_intersect($userroles, $linkrolesarr);
-                $pregmatch = false;
-                foreach ($linkrolesarr as $reg) {
-                    $regex = "/${reg}/i";
-                    if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
-                        $pregmatch = true;
-                        break;
-                    }
-                }
-                if ($linkroles == "*" || $rolesallowed || $pregmatch || is_siteadmin()) {
+                $allowed = $this->checkallowed($this->config->textlinkcampusroles[$i], $userroles);
+                if ($allowed) {
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
                     $target = isset($this->config->textlinktarget[$i]) ? $this->config->textlinktarget[$i] : '';
-
                     $data['textlinks'][] = [
                         'label' => $label,
                         'url' => $url,
@@ -201,5 +177,22 @@ class block_custom_site_links extends block_base {
         }
 
         return $this->content;
+    }
+
+    public function checkallowed($linkroles, $userroles) {
+        $linkrolesarr = array_map('trim', explode(',', $linkroles));
+        $rolesallowed = array_intersect($userroles, $linkrolesarr);
+        $userrolesstr = implode(',',$userroles);
+        if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
+            return true;
+        }
+        // Do regex checks
+        foreach ($linkrolesarr as $reg) {
+            $regex = "/${reg}/i";
+            if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
