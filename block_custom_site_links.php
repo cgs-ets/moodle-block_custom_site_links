@@ -186,7 +186,7 @@ class block_custom_site_links extends block_base {
         if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
             return true;
         }
-        // Do regex checks
+        // Do regex checks.
         foreach ($linkrolesarr as $reg) {
             $regex = "/${reg}/i";
             if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
