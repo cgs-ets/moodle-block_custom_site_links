@@ -23,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019111201;
+$plugin->version = 2020011300;
 $plugin->requires = 2010121000;
 $plugin->component = 'block_custom_site_links';
 $plugin->maturity = MATURITY_BETA;
