@@ -118,6 +118,7 @@ class block_custom_site_links extends block_base {
             'iconlinks' => array(),
             'textlinks' => array(),
             'linktypes' => '',
+            'linknumber' => '',
         ];
         if (isset($this->config->iconlinkurl)) {
             foreach ($this->config->iconlinkurl as $i => $url) {
@@ -160,6 +161,9 @@ class block_custom_site_links extends block_base {
 
         // Determine the type of links this block has to add as a css class later.
         if (!empty($data['textlinks'])) {
+            if (count($data['textlinks']) < 10) {
+                $data['linknumber'] = 'fewer-than-ten';
+            }
             if (!empty($data['iconlinks'])) {
                 $data['linktypes'] = 'types-both';
             } else {
@@ -182,7 +186,7 @@ class block_custom_site_links extends block_base {
     public function checkallowed($linkroles, $userroles) {
         $linkrolesarr = array_map('trim', explode(',', $linkroles));
         $rolesallowed = array_intersect($userroles, $linkrolesarr);
-        $userrolesstr = implode(',',$userroles);
+        $userrolesstr = implode(',', $userroles);
         if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
             return true;
         }

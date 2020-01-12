@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  grunt.initConfig({
+grunt.initConfig({
     stylelint: {
       css: ['**/*.css'],
       less: ['**/*.less']

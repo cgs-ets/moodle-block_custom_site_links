@@ -37,23 +37,23 @@
         "linktypes": "types-both"
     }
 }}
-<div class="block_custom_site_links {{linktypes}}" data-region="block_custom_site_links-instance-{{instanceid}}">
+<div class="block_custom_site_links {{linktypes}} {{linknumber}}" data-region="block_custom_site_links-instance-{{instanceid}}">
     <div class="iconcolumn">
         <ul class="icon-button-grid">
-			{{#iconlinks}}
-        	<li>
+            {{#iconlinks}}
+            <li>
                 <a href="{{url}}" target="{{target}}" title="{{label}}">
-                	<img class="btnicon" src="{{icon}}" alt="{{label}}" />
-                	<span class="button-text">{{label}}</span>
+                    <img class="btnicon" src="{{icon}}" alt="{{label}}" />
+                    <span class="button-text">{{label}}</span>
                 </a>
             </li>
             {{/iconlinks}}
         </ul>
     </div>
     <div class="textlinks">
-    	<ul>
-			{{#textlinks}}
-        	<li>
+        <ul>
+            {{#textlinks}}
+            <li>
                 <a href="{{url}}" target="{{target}}" title="{{label}}">{{label}}</a>
             </li>
             {{/textlinks}}
