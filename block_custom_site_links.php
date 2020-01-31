@@ -129,7 +129,7 @@ class block_custom_site_links extends block_base {
                 if ($allowed) {
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
-                    $target = isset($this->config->iconlinktarget[$i]) ? $this->config->iconlinktarget[$i] : '';
+                    $target = isset($this->config->iconlinktarget[$i]) ? '_blank' : '';
                     $data['iconlinks'][] = [
                         'icon' => $icon,
                         'label' => $label,
@@ -179,6 +179,8 @@ class block_custom_site_links extends block_base {
         if ($data['linktypes'] != '') {
             $this->content->text = $OUTPUT->render_from_template('block_custom_site_links/content', $data);
         }
+        
+        
 
         return $this->content;
     }
