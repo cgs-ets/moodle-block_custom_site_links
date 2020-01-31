@@ -149,7 +149,7 @@ class block_custom_site_links extends block_base {
                 if ($allowed) {
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                     $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
-                    $target = isset($this->config->textlinktarget[$i]) ? $this->config->textlinktarget[$i] : '';
+                    $target = isset($this->config->textlinktarget[$i]) ? '_blank' : '';
                     $data['textlinks'][] = [
                         'label' => $label,
                         'url' => $url,
