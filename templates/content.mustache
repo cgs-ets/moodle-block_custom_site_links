@@ -1,0 +1,62 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @package   block_course_announcements
+    @copyright 2019 Michael Vangelovski, Canberra Grammar School <michael.vangelovski@cgs.act.edu.au>
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+    @template block_custom_site_links/content
+
+    Custom Site Links block content template.
+    
+    Example context (json):                                                                                                         
+    {
+        "instanceid": "86",
+        "iconlinks": [
+            { "icon": "https://via.placeholder.com/50", "label": "CGS Website","url": "https://cgs.act.edu.au", "target": 1 },
+            { "icon": "https://via.placeholder.com/50", "label": "Drive","url": "https://drive.google.com", "target": 1 }
+        ],
+        "textlinks": [
+            { "label": "Daily Notes", "url": "/daily-notes", "target": 0 },
+            { "label": "DocMan Uploader", "url": "/Uploader", "target": 0 }
+        ],
+        "linktypes": "types-both"
+    }
+}}
+<div class="block_custom_site_links {{linktypes}} {{linknumber}}" data-region="block_custom_site_links-instance-{{instanceid}}">
+    <div class="iconcolumn">
+        <ul class="icon-button-grid">
+            {{#iconlinks}}
+            <li>
+                <a href="{{url}}" target="{{target}}" title="{{label}}">
+                    <img class="btnicon" src="{{icon}}" alt="{{label}}" />
+                    <span class="button-text">{{label}}</span>
+                </a>
+            </li>
+            {{/iconlinks}}
+        </ul>
+    </div>
+    <div class="textlinks">
+        <ul>
+            {{#textlinks}}
+            <li>
+                <a href="{{url}}" target="{{target}}" title="{{label}}">{{label}}</a>
+            </li>
+            {{/textlinks}}
+        </ul>
+    </div>
+</div>
