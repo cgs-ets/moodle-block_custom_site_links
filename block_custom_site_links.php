@@ -190,23 +190,6 @@ class block_custom_site_links extends block_base {
 
         return $this->content;
     }
-
-    public function checkallowed_volar($linkroles, $userroles) {
-        $linkrolesarr = array_map('trim', explode(',', $linkroles));
-        $rolesallowed = array_intersect($userroles, $linkrolesarr);
-        $userrolesstr = implode(',', $userroles);
-        if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
-            return true;
-        }
-        // Do regex checks.
-        foreach ($linkrolesarr as $reg) {
-            $regex = "/${reg}/i";
-            if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
-                return true;
-            }
-        }
-        return false;
-    }
     
     public function checkallowed ($linkroles,$userroles,$linkyears,$useryears){
        $linkrolesarr = array_map('trim', explode(',', $linkroles));
