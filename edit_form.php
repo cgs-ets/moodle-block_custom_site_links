@@ -98,6 +98,12 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $label = get_string('roles', 'block_custom_site_links');
         $options = array('size' => '50');
         $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+        
+        $type = 'text';
+        $name = 'config_iconlinkyear';
+        $label = get_string('years', 'block_custom_site_links');
+        $options = array('size' => '50');
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
         $type = 'text';
         $name = 'config_iconlinkorder';
@@ -132,6 +138,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinkurl']['type']    = PARAM_RAW;
         $repeatoptions['config_iconlinktarget']['type'] = PARAM_INT;
         $repeatoptions['config_iconlinkcampusroles']['type']  = PARAM_TEXT;
+        $repeatoptions['config_iconlinkyear']['type']  = PARAM_TEXT;
         $repeatoptions['config_iconlinkorder']['type']  = PARAM_INT;
         $repeatoptions['config_iconlinkdelete']['type'] = PARAM_INT;
 
@@ -141,6 +148,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinklabel']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinkurl']['rule']    = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinkcampusroles']['rule']  = array(get_string('required'), 'required', null, 'server');
+        //$repeatoptions['config_iconlinkyear']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinkorder']['rule']  = array(get_string('numeric', 'block_custom_site_links'),
             'numeric', null, 'client');
 
@@ -149,6 +157,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinkurl']['disabledif']     = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinktarget']['disabledif']  = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinkcampusroles']['disabledif']   = array('config_iconlinkdelete', 'checked');
+        $repeatoptions['config_iconlinkyear']['disabledif']   = array('config_iconlinkdelete', 'checked');
         $repeatoptions['config_iconlinkorder']['disabledif']   = array('config_iconlinkdelete', 'checked');
 
         $repeatoptions['config_iconlinkorder']['hideif']   = array('config_sorticonlinksalpha', 'checked');
@@ -201,6 +210,12 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $label = get_string('roles', 'block_custom_site_links');
         $options = array('size' => '50');
         $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
+        
+        $type = 'text';
+        $name = 'config_textlinkyear';
+        $label = get_string('years', 'block_custom_site_links');
+        $options = array('size' => '50');
+        $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
         $type = 'text';
         $name = 'config_textlinkorder';
@@ -235,6 +250,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinkurl']['type']    = PARAM_RAW;
         $repeatoptions['config_textlinktarget']['type'] = PARAM_INT;
         $repeatoptions['config_textlinkcampusroles']['type']  = PARAM_TEXT;
+        $repeatoptions['config_textlinkyear']['type']  = PARAM_TEXT;
         $repeatoptions['config_textlinkorder']['type']  = PARAM_INT;
         $repeatoptions['config_textlinkdelete']['type'] = PARAM_INT;
 
@@ -243,13 +259,15 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinklabel']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkurl']['rule']    = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkcampusroles']['rule']  = array(get_string('required'), 'required', null, 'server');
+        //$repeatoptions['config_textlinkyear']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkorder']['rule']  = array(get_string('numeric', 'block_custom_site_links'),
             'numeric', null, 'client');
 
         $repeatoptions['config_textlinklabel']['disabledif']    = array('config_textlinkdelete', 'checked');
         $repeatoptions['config_textlinkurl']['disabledif']      = array('config_textlinkdelete', 'checked');
         $repeatoptions['config_textlinktarget']['disabledif']   = array('config_textlinkdelete', 'checked');
-        $repeatoptions['config_textlinkcampusroles']['disabledif']    = array('config_textlinkdelete', 'checked');
+        $repeatoptions['config_textlinkcampusroles']['disabledif']  = array('config_textlinkdelete', 'checked');
+        $repeatoptions['config_textlinkyear']['disabledif']  = array('config_textlinkyear', 'checked');
         $repeatoptions['config_textlinkorder']['disabledif']   = array('config_textlinkdelete', 'checked');
 
         $repeatoptions['config_textlinkorder']['hideif']   = array('config_sorttextlinksalpha', 'checked');
