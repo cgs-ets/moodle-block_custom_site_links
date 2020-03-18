@@ -51,7 +51,6 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $mform->addElement('header', 'configheader', get_string('iconlinksheader', 'block_custom_site_links'));
         $mform->addElement('static', 'rolesdesc', '', get_string('roles_desc', 'block_custom_site_links'));
 
-
         $type = 'advcheckbox';
         $name = 'config_sorticonlinksalpha';
         $label = get_string('sorticonsalpha', 'block_custom_site_links');

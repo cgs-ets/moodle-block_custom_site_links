@@ -83,17 +83,19 @@ class block_custom_site_links extends block_base {
      * @return object
      */
     public function get_content() {
-        global $USER, $OUTPUT;
-
+        global $USER, $OUTPUT, $DB;
         // Determing which user role we are rendering to.
         // This block assumes users have custom profile fields for CampusRoles.
         $userroles = array();
-        $useryears = array();
+
         if (isset($USER->profile['CampusRoles'])) {
             $userroles = explode(',', $USER->profile['CampusRoles']);
         }
-        
-        if (isset($USER->profile['Year'])) {
+
+        // Determing which user year we are rendering to.
+        $useryears = array();
+
+        if (!empty($USER->profile['Year'])) {
             $useryears = explode(',', $USER->profile['Year']);
         }
 
@@ -125,22 +127,57 @@ class block_custom_site_links extends block_base {
             'linktypes' => '',
             'linknumber' => '',
         ];
+
         if (isset($this->config->iconlinkurl)) {
             foreach ($this->config->iconlinkurl as $i => $url) {
                 if ($url == '') {
                     continue;
                 }
-                $allowed = $this->checkallowed($this->config->iconlinkcampusroles[$i], $userroles, $this->config->iconlinkyear[$i],$useryears);
-                if ($allowed) {
-                    $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
-                    $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
-                    $target = isset($this->config->iconlinktarget[$i]) ? '_blank' : '';
-                    $data['iconlinks'][] = [
-                        'icon' => $icon,
-                        'label' => $label,
-                        'url' => $url,
-                        'target' => $target,
-                    ];
+
+                $validatebyrole = true;
+
+                if (!empty($this->config->iconlinkyear[$i]) && !empty($useryears)) {
+
+                    $validatebyrole = false;
+                }
+
+                if ($validatebyrole) {
+
+                    $rolesallowed = $this->rolesallowed($this->config->iconlinkcampusroles[$i], $userroles);
+                    if ($rolesallowed) {
+                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                        $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
+                        $target = isset($this->config->iconlinktarget[$i]) ? '_blank' : '';
+                        $data['iconlinks'][] = [
+                            'icon' => $icon,
+                            'label' => $label,
+                            'url' => $url,
+                            'target' => $target,
+                        ];
+
+                    }
+                } else { // Is a student and the Year in the link is set.
+
+                    $yearsallowed = $this->yearsallowed($this->config->iconlinkyear[$i], $useryears);
+
+                    if ($yearsallowed) {
+                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                        if (isset($data['iconlinks'][$i])) {
+                            if ($data['iconlinks'][$i]['icon'] == $icon) {
+                                continue;
+                            }
+                        }
+
+                        $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
+                        $target = isset($this->config->iconlinktarget[$i]) ? '_blank' : '';
+                        $data['iconlinks'][] = [
+                            'icon' => $icon,
+                            'label' => $label,
+                            'url' => $url,
+                            'target' => $target,
+                        ];
+
+                    }
                 }
             }
         }
@@ -150,18 +187,47 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                
-                $allowed = $this->checkallowed($this->config->textlinkcampusroles[$i], $userroles, $this->config->textlinkyear[$i],$useryears);
-                if ($allowed) {
-                    $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
-                    $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
-                    $target = isset($this->config->textlinktarget[$i]) ? '_blank' : '';
-                    $data['textlinks'][] = [
-                        'label' => $label,
-                        'url' => $url,
-                        'target' => $target,
-                    ];
+                $validatebyrole = true;
+                if (!empty($this->config->textlinkyear[$i]) && !empty($useryears)) {
+                    $validatebyrole = false;
                 }
+
+                if ($validatebyrole) {
+
+                    $rolesallowed = $this->rolesallowed($this->config->textlinkcampusroles[$i], $userroles);
+                    if ($rolesallowed) {
+                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                        $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
+                        $target = isset($this->config->textlinktarget[$i]) ? '_blank' : '';
+                        $data['textlinks'][] = [
+                            'label' => $label,
+                            'url' => $url,
+                            'target' => $target,
+                        ];
+                    }
+                } else {
+
+                    $yearsallowed = $this->yearsallowed($this->config->textlinkyear[$i], $useryears);
+
+                    if ($yearsallowed) {
+                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                        $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
+
+                        if (isset(($data['iconlinks'][$i]))) {
+                            if ($data['iconlinks'][$i]['url'] == $url) {
+                                continue;
+                            }
+                        }
+
+                        $target = isset($this->config->textlinktarget[$i]) ? '_blank' : '';
+                        $data['textlinks'][] = [
+                            'label' => $label,
+                            'url' => $url,
+                            'target' => $target,
+                        ];
+                    }
+                }
+
             }
         }
 
@@ -185,43 +251,35 @@ class block_custom_site_links extends block_base {
         if ($data['linktypes'] != '') {
             $this->content->text = $OUTPUT->render_from_template('block_custom_site_links/content', $data);
         }
-        
-        
 
         return $this->content;
     }
-    
-    public function checkallowed ($linkroles,$userroles,$linkyears,$useryears){
-       $linkrolesarr = array_map('trim', explode(',', $linkroles));
-       $rolesallowed = array_intersect($userroles, $linkrolesarr);
-       $userrolesstr = implode(',', $userroles);
-       
-       $linkyearsarr = array_map('trim', explode(',', $linkyears));
-       $yearsallowed = array_intersect($useryears, $linkyearsarr);
-       $useryearsarr = implode(',', $useryears);
-       
-       if(($linkroles == '*' && empty($linkyears) ) || ($linkyears == '*' && $linkroles == '*') || is_siteadmin()) {         
-           return true;
-       }
-      
-       if(!empty($linkyears) ) {
-              // Do regex checks.
+
+    public function rolesallowed($linkroles, $userroles) {
+        $linkrolesarr = array_map('trim', explode(',', $linkroles));
+        $rolesallowed = array_intersect($userroles, $linkrolesarr);
+        $userrolesstr = implode(',', $userroles);
+        if ($linkroles == "*" || $rolesallowed || is_siteadmin()) {
+            return true;
+        }
+        // Do regex checks.
         foreach ($linkrolesarr as $reg) {
-            $reg = preg_quote($reg,'*');   
             $regex = "/${reg}/i";
             if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
                 return true;
             }
         }
-        
-         foreach ($linkyearsarr as $reg) {
-            $reg = preg_quote($reg,'*');
-            $regex = "/${reg}/i";
-            if ($reg && (preg_match($regex, $useryearsarr) === 1)) {
-                return true;
-            }
+        return false;
+    }
+
+
+    public function yearsallowed($linkyears, $useryear) {
+        $linkyearsarr = array_map('trim', explode(',', $linkyears));
+        $yearsallowed = array_intersect($useryear, $linkyearsarr);
+        if ( !empty($yearsallowed)) {
+            return true;
         }
-       }
+
         return false;
     }
 }
