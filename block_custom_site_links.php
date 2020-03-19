@@ -259,7 +259,7 @@ class block_custom_site_links extends block_base {
     public function yearsallowed($linkyears, $useryear) {
         $linkyearsarr = array_map('trim', explode(',', $linkyears));
         $yearsallowed = array_intersect($useryear, $linkyearsarr);
-        if ( !empty($yearsallowed)) {
+        if ( !empty($yearsallowed) || is_siteadmin() ) {
             return true;
         }
 
