@@ -177,10 +177,6 @@ class block_custom_site_links extends block_base {
                 if ($url == '') {
                     continue;
                 }
-                $validatebyrole = true;
-                if ( && !empty($useryears)) {
-                    $validatebyrole = false;
-                }
 
                 if (!empty($this->config->textlinkyear[$i])) {
                     $yearsallowed = $this->yearsallowed($this->config->textlinkyear[$i], $useryears);
