@@ -134,32 +134,8 @@ class block_custom_site_links extends block_base {
                     continue;
                 }
 
-                $validatebyrole = true;
-
-                if (!empty($this->config->iconlinkyear[$i]) && !empty($useryears)) {
-
-                    $validatebyrole = false;
-                }
-
-                if ($validatebyrole) {
-
-                    $rolesallowed = $this->rolesallowed($this->config->iconlinkcampusroles[$i], $userroles);
-                    if ($rolesallowed) {
-                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
-                        $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
-                        $target = isset($this->config->iconlinktarget[$i]) ? '_blank' : '';
-                        $data['iconlinks'][] = [
-                            'icon' => $icon,
-                            'label' => $label,
-                            'url' => $url,
-                            'target' => $target,
-                        ];
-
-                    }
-                } else { // Is a student and the Year in the link is set.
-
+                if (!empty($this->config->iconlinkyear[$i])) {
                     $yearsallowed = $this->yearsallowed($this->config->iconlinkyear[$i], $useryears);
-
                     if ($yearsallowed) {
                         $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
                         if (isset($data['iconlinks'][$i])) {
@@ -176,8 +152,22 @@ class block_custom_site_links extends block_base {
                             'url' => $url,
                             'target' => $target,
                         ];
+                    }
+                } else {
+                    $rolesallowed = $this->rolesallowed($this->config->iconlinkcampusroles[$i], $userroles);
+                    if ($rolesallowed) {
+                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                        $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
+                        $target = isset($this->config->iconlinktarget[$i]) ? '_blank' : '';
+                        $data['iconlinks'][] = [
+                            'icon' => $icon,
+                            'label' => $label,
+                            'url' => $url,
+                            'target' => $target,
+                        ];
 
                     }
+
                 }
             }
         }
@@ -188,25 +178,11 @@ class block_custom_site_links extends block_base {
                     continue;
                 }
                 $validatebyrole = true;
-                if (!empty($this->config->textlinkyear[$i]) && !empty($useryears)) {
+                if ( && !empty($useryears)) {
                     $validatebyrole = false;
                 }
 
-                if ($validatebyrole) {
-
-                    $rolesallowed = $this->rolesallowed($this->config->textlinkcampusroles[$i], $userroles);
-                    if ($rolesallowed) {
-                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
-                        $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
-                        $target = isset($this->config->textlinktarget[$i]) ? '_blank' : '';
-                        $data['textlinks'][] = [
-                            'label' => $label,
-                            'url' => $url,
-                            'target' => $target,
-                        ];
-                    }
-                } else {
-
+                if (!empty($this->config->textlinkyear[$i])) {
                     $yearsallowed = $this->yearsallowed($this->config->textlinkyear[$i], $useryears);
 
                     if ($yearsallowed) {
@@ -226,8 +202,19 @@ class block_custom_site_links extends block_base {
                             'target' => $target,
                         ];
                     }
+                } else {
+                    $rolesallowed = $this->rolesallowed($this->config->textlinkcampusroles[$i], $userroles);
+                    if ($rolesallowed) {
+                        $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                        $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
+                        $target = isset($this->config->textlinktarget[$i]) ? '_blank' : '';
+                        $data['textlinks'][] = [
+                            'label' => $label,
+                            'url' => $url,
+                            'target' => $target,
+                        ];
+                    }
                 }
-
             }
         }
 
