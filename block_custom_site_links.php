@@ -52,7 +52,7 @@ class block_custom_site_links extends block_base {
      * @return bool
      */
     public function instance_allow_multiple() {
-        return false;
+        return true;
     }
 
     /**
@@ -259,7 +259,7 @@ class block_custom_site_links extends block_base {
     public function yearsallowed($linkyears, $useryear) {
         $linkyearsarr = array_map('trim', explode(',', $linkyears));
         $yearsallowed = array_intersect($useryear, $linkyearsarr);
-        if ( !empty($yearsallowed) || is_siteadmin() ) {
+        if ( $linkyears == '*' || !empty($yearsallowed) || is_siteadmin() ) {
             return true;
         }
 

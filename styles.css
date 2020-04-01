@@ -77,15 +77,20 @@
 .block_custom_site_links.types-one .textlinks {
     border: 0 none;
 }
-.block_custom_site_links.types-both.fewer-than-ten .textlinks{
-        column-count: 3;
-        width: 100%;
-        column-width: 200px;
+.block_custom_site_links.types-both.fewer-than-ten .textlinks {
+    column-count: 3;
+    width: 100%;
+    column-width: 200px;
 }
-.block_custom_site_links.types-both.fewer-than-ten .iconcolumn{
-        width: 100%;
+.block_custom_site_links.types-both.fewer-than-ten .iconcolumn {
+    width: 100%;
 }
-
+.block_custom_site_links.types-one.types-icons .textlinks {
+    display: none;
+}
+.block_custom_site_links.types-one.types-text .iconcolumn {
+    display: none;
+}
 /* Drawer open */
 @media screen and (min-width: 920px) {
     body.drawer-open-left .block_custom_site_links .textlinks {
