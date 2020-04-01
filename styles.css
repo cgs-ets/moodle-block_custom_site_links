@@ -88,8 +88,16 @@
 .block_custom_site_links.types-one.types-icons .textlinks {
     display: none;
 }
+.block_custom_site_links.types-one.types-icons .iconcolumn {
+    width: 100%;
+    border-right: 0 none;
+    padding-right: 0;
+}
 .block_custom_site_links.types-one.types-text .iconcolumn {
     display: none;
+}
+.block_custom_site_links.types-one.types-text .textlinks {
+    width: 100%;
 }
 /* Drawer open */
 @media screen and (min-width: 920px) {
