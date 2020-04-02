@@ -248,7 +248,7 @@ class block_custom_site_links extends block_base {
         // Do regex checks.
         foreach ($linkrolesarr as $reg) {
             $regex = "/${reg}/i";
-            if ($reg && (preg_match($regex, $userrolesstr) === 1)) {
+             if ($reg && $reg == "*" || ((preg_match($regex, $userrolesstr) === 1))) {
                 return true;
             }
         }
