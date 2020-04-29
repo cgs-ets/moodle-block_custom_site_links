@@ -230,6 +230,7 @@ class block_custom_site_links extends block_base {
            $str = $userrolesstr;
         }
 
+
         // Do regex checks.
         foreach ($allowed as $reg) {
             $regex = "/${reg}/i";
@@ -237,33 +238,15 @@ class block_custom_site_links extends block_base {
             if ($reg && $reg == "*") {
                 return true;
             }
+
             // Role = Student but Year level != to the student's year.
             if ($isstudent) {
-               return $this->match_year($allowed, $useryearsstr);
+               return  in_array($useryearsstr,$linkyearsarr);
             }else if ((preg_match($regex, $str) === 1)){
                 return true;
             }
         }
         return false;
 
-    }
-
-    /**
-     * Validates the case where a link has role student assigned
-     * and also the link also has a year level assigned.
-     * In this case, it is validated that the year level matches
-     * the student's year level.
-     * @param array $allowed
-     * @param string $useryearsstr
-     * @return boolean
-     */
-    private function match_year($allowed,$useryearsstr){
-        foreach ($allowed as $reg) {
-            $regex = "/${reg}/i";
-            if ((preg_match($regex, $useryearsstr) === 1)){
-                return true;
-            }
-        }
-        return false;
     }
 }
