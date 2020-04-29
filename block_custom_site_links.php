@@ -136,6 +136,8 @@ class block_custom_site_links extends block_base {
 
                  $allowed = $this->is_allowed($this->config->iconlinkcampusroles[$i], $userroles, $this->config->iconlinkyear[$i], $useryears);
 
+                
+
                 if ($allowed) {
 
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
@@ -230,20 +232,19 @@ class block_custom_site_links extends block_base {
            $str = $userrolesstr;
         }
 
-
         // Do regex checks.
         foreach ($allowed as $reg) {
-            $regex = "/${reg}/i";
-
-            if ($reg && $reg == "*") {
-                return true;
-            }
+            $regex = "/${reg}/i";             
 
             // Role = Student but Year level != to the student's year.
-            if ($isstudent) {
+            if ($isstudent) {               
                return  in_array($useryearsstr,$linkyearsarr);
             }else if ((preg_match($regex, $str) === 1)){
                 return true;
+            }
+             
+            if ($reg && $reg == "*") {
+              return true;
             }
         }
         return false;
