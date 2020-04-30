@@ -236,15 +236,11 @@ class block_custom_site_links extends block_base {
         foreach ($allowed as $reg) {
             $regex = "/${reg}/i";             
 
-            // Role = Student but Year level != to the student's year.
-            if ($isstudent) {               
+                // Role = Student but Year level != to the student's year.
+            if ($isstudent) {
                return  in_array($useryearsstr,$linkyearsarr);
-            }else if ((preg_match($regex, $str) === 1)){
+            }else if ($reg && $reg == "*" || (preg_match($regex, $str) === 1)){
                 return true;
-            }
-             
-            if ($reg && $reg == "*") {
-              return true;
             }
         }
         return false;
