@@ -90,5 +90,7 @@ function block_custom_site_links_pluginfile($course, $birecordorcm, $context, $f
     }
 
     \core\session\manager::write_close();
-    send_stored_file($file, 60 * 60, 0, $forcedownload, $options);
+
+    // Set the caching time for five days.
+    send_stored_file($file, 120 * 60 * 60, 0, $forcedownload, $options);
 }
