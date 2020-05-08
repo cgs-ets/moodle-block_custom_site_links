@@ -135,9 +135,6 @@ class block_custom_site_links extends block_base {
                 }
 
                  $allowed = $this->is_allowed($this->config->iconlinkcampusroles[$i], $userroles, $this->config->iconlinkyear[$i], $useryears);
-
-                
-
                 if ($allowed) {
 
                     $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
@@ -234,7 +231,7 @@ class block_custom_site_links extends block_base {
 
         // Do regex checks.
         foreach ($allowed as $reg) {
-            $regex = "/${reg}/i";             
+            $regex = "/${reg}/i";
 
                 // Role = Student but Year level != to the student's year.
             if ($isstudent) {

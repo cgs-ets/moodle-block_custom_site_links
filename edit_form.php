@@ -389,6 +389,106 @@ class block_custom_site_links_edit_form extends block_edit_form {
     }
 
     /**
+     * To validate cases like *stafff, *parentx, *:role,
+     * @param string $role
+     * @return boolean
+     */
+    private function validate_wildcard($role){
+        $validvalues = ['staff','parents','students', 'adminstaff',':staff',':parents',':students', ':adminstaff'];
+        if ($role == '*'){
+            return true;
+        }
+        if ( (false == strpos($role, '*.')) && (false != strpbrk($role, '.*'))
+            || (false != strpbrk($role, '*') )) {
+            return (in_array(substr(strstr($role, '*'), 1),$validvalues));
+        }
+        return true;
+    }
+     //Custom validation should be added here
+    function validation($data, $files) {
+        $errors = parent::validation($data,$files);
+        $linkroles = $this->prepare_roles_to_validate($data['config_iconlinkcampusroles']);
+        $config = get_config('block_custom_site_links');
+        $availableroles = $this->prepare_roles_to_validate(explode(',', $config->rolesset));
+
+        //Validate icon links role and years.
+        foreach ($linkroles as $i => $role) {
+            $roles = explode(',', $role);
+            foreach($roles as $lr=>$r){
+                if ( $this->validate_wildcard($r) || in_array($r,$availableroles)) {
+                    continue;
+                }else{
+                     $errors["config_iconlinkcampusroles[${i}]"] = get_string('errorrole','block_custom_site_links');
+                }
+            }
+        }
+
+        $linkyears = $data['config_iconlinkyear'];
+        $avaliableyears = explode(',',$config->years);
+
+        foreach($linkyears as $j=>$years) {
+            $years = explode(',',$years);
+            foreach($years as $y=>$year){
+                if(!empty($year)){
+                    if((in_array($year, $avaliableyears))){
+                        continue;
+                    }else{
+                        $errors["config_iconlinkyear[${j}]"] = get_string('erroryear','block_custom_site_links');
+                    }
+                }
+            }
+        }
+
+        //Validate Text Links roles and years
+        $linkrolestext = $this->prepare_roles_to_validate($data['config_textlinkcampusroles']);
+
+        foreach ($linkrolestext as $i => $role) {
+            $roles = explode(',', $role);
+            foreach($roles as $lr=>$r){
+                if ( $this->validate_wildcard($r) || in_array($r,$availableroles)) {
+                    continue;
+                }else{
+                    $errors["config_textlinkcampusroles[${i}]"] = get_string('errorrole','block_custom_site_links');
+                }
+            }
+        }
+
+        $textlinkyears = $data['config_textlinkyear'];
+        $avaliableyears = explode(',',$config->years);
+
+        foreach($textlinkyears as $j=>$years) {
+            $years = explode(',',$years);
+            foreach($years as $y=>$year){
+                if(!empty($year)){
+                    if((in_array($year, $avaliableyears))){
+                        continue;
+                    }else{
+                        $errors["config_textlinkyear[${j}]"] = get_string('erroryear','block_custom_site_links');
+                    }
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+
+    /**
+     * Returns a list of roles without white spaces
+     * Example : junior school:future parents -> juniorschool:futureparents
+     * @param array $listofroles
+     * @return array
+     */
+    private function prepare_roles_to_validate ($listofroles) {
+        $list = array ();
+        foreach($listofroles as $lr =>$role){
+            $list [$lr] = str_replace(' ','',strtolower($role));
+        }
+        return $list;
+    }
+
+
+    /**
      * Set form data.
      *
      * @param array $defaults
@@ -496,5 +596,4 @@ class block_custom_site_links_edit_form extends block_edit_form {
         ksort($array);
         return $array;
     }
-
 }
