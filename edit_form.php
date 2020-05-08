@@ -402,7 +402,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
             || (false != strpbrk($role, '*') )) {
             return (in_array(substr(strstr($role, '*'), 1),$validvalues));
         }
-        return true;
+        return false;
     }
      //Custom validation should be added here
     function validation($data, $files) {
