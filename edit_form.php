@@ -424,12 +424,13 @@ class block_custom_site_links_edit_form extends block_edit_form {
         }
 
         $linkyears = $data['config_iconlinkyear'];
-        $avaliableyears = explode(',',$config->years);
+        $avaliableyears = explode(',',trim($config->years));
 
         foreach($linkyears as $j=>$years) {
             $years = explode(',',$years);
             foreach($years as $y=>$year){
                 if(!empty($year)){
+
                     if((in_array($year, $avaliableyears))){
                         continue;
                     }else{
@@ -454,7 +455,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         }
 
         $textlinkyears = $data['config_textlinkyear'];
-        $avaliableyears = explode(',',$config->years);
+        $avaliableyears = explode(',',trim($config->years));
 
         foreach($textlinkyears as $j=>$years) {
             $years = explode(',',$years);
