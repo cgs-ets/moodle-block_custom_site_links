@@ -390,6 +390,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
 
     /**
      * To validate cases like *stafff, *parentx, *:role,
+     * This
      * @param string $role
      * @return boolean
      */
@@ -398,18 +399,13 @@ class block_custom_site_links_edit_form extends block_edit_form {
         if ($role == '*'){
             return true;
         }
-
+        $this->get_valid_patterns();
         $config =  get_config('block_custom_site_links');
 
         $roleset = $config->rolesset;
-
-        $firstpattern = $this->get_wildcard_combination('*', $roleset);
-        $secondpattern = $this->get_wildcard_combination('.*', $roleset);
-        $thirdpattern = $this->get_wildcard_combination('.*:', $roleset);
-
+        $patterns = $this->get_valid_patterns();
         $ro = $this->prepare_roles_to_validate(explode(',', $roleset)); // Roles as is, without *
-
-        $validcombinations = array_unique(array_merge($firstpattern, $secondpattern,$thirdpattern,$ro));
+        $validcombinations = array_unique(array_merge($patterns,$ro));
 
         if ( (false == strpos($role, '*.')) && (false != strpbrk($role, '.*'))
             || (false != strpbrk($role, '*') && (false != strpbrk($role, '.*:')))) {
@@ -417,6 +413,49 @@ class block_custom_site_links_edit_form extends block_edit_form {
         }
 
         return false;
+    }
+
+    /**
+     * Helper function.
+     * Returns the possible pattern combinations the
+     * roles field can have.
+     * The possible patterns are defined in the settings of the block.
+     */
+    private function get_valid_patterns(){
+        $config =  get_config('block_custom_site_links');
+        $patterns = explode(',', $config->patterns);
+
+        #var_dump($patterns); exit;
+        $roleset = $config->rolesset;
+        $validcombination = array();
+
+        foreach($patterns as $i=>$pattern) {
+          $validcombination[$i] = $this->get_wildcard_combination(trim($pattern),$roleset);
+        }
+
+        $final_array = $this->nested_to_single_combination($validcombination);
+
+        return $final_array;
+    }
+
+    /**
+     * Helper function, receives a multidimensional array and returns
+     * an 1D array.
+     * @param array $validcombination
+     * @return array
+     */
+    private function nested_to_single_combination($validcombination) {
+         $final_array = [];
+
+         foreach($validcombination as $combination) {
+             if(is_array($combination)) {
+                 $final_array = array_merge($final_array, $this->nested_to_single_combination($combination));
+             }else{
+                 $final_array [] = $combination;
+             }
+         }
+
+         return $final_array;
     }
 
     private function get_wildcard_combination($pattern, $roles) {

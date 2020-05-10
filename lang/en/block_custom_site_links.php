@@ -59,3 +59,6 @@ $string['descconfig'] = 'Provide a list of valid roles';
 $string ['availableroles'] = 'Roles Available';
 $string['availablerolesdesc'] =  '';
 $string['years_desc'] = '';
+$string['patterns'] = 'Valid Patterns';
+$string['validpatterns'] = '*, .*, .*:';
+$string['patterns_desc'] = '';

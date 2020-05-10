@@ -39,4 +39,8 @@
         $settings->add(new admin_setting_configtext('block_custom_site_links/years',
             get_string('years', 'block_custom_site_links'),
             get_string('years_desc', 'block_custom_site_links'), get_string('validyears','block_custom_site_links')));
+
+        $settings->add(new admin_setting_configtext('block_custom_site_links/patterns',
+            get_string('patterns', 'block_custom_site_links'),
+            get_string('patterns_desc', 'block_custom_site_links'), get_string('validpatterns','block_custom_site_links')));
     }
