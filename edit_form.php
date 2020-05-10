@@ -394,17 +394,54 @@ class block_custom_site_links_edit_form extends block_edit_form {
      * @return boolean
      */
     private function validate_wildcard($role){
-        $validvalues = ['staff','parents','students', 'adminstaff',':staff',':parents',':students', ':adminstaff'];
+
         if ($role == '*'){
             return true;
         }
+
+        $config =  get_config('block_custom_site_links');
+
+        $roleset = $config->rolesset;
+
+        $firstpattern = $this->get_wildcard_combination('*', $roleset);
+        $secondpattern = $this->get_wildcard_combination('.*', $roleset);
+        $thirdpattern = $this->get_wildcard_combination('.*:', $roleset);
+
+        $ro = $this->prepare_roles_to_validate(explode(',', $roleset)); // Roles as is, without *
+
+        $validcombinations = array_unique(array_merge($firstpattern, $secondpattern,$thirdpattern,$ro));
+
         if ( (false == strpos($role, '*.')) && (false != strpbrk($role, '.*'))
-            || (false != strpbrk($role, '*') )) {
-            return (in_array(substr(strstr($role, '*'), 1),$validvalues));
+            || (false != strpbrk($role, '*') && (false != strpbrk($role, '.*:')))) {
+            return (in_array($role,$validcombinations));
         }
+
         return false;
     }
-     //Custom validation should be added here
+
+    private function get_wildcard_combination($pattern, $roles) {
+
+        // Prepare the list of roles.
+        $r = explode(':', $roles);
+        $r = implode(',', $r);
+        $r = explode(',', $r);
+        $final_roles = array_unique($r);
+        $final_roles = $this->prepare_roles_to_validate($final_roles);
+
+        foreach ($final_roles as $i => $j) {
+
+            if (strcmp($j, '*') != 0 && strcmp($j, '.*')!= 0)  {
+                $result [$i] = substr_replace($j, $pattern, 0, 0);
+            } else {
+                $result [$i] = $j;
+            }
+        }
+
+        return $result;
+
+
+    }
+
     function validation($data, $files) {
         $errors = parent::validation($data,$files);
         $linkroles = $this->prepare_roles_to_validate($data['config_iconlinkcampusroles']);
@@ -483,7 +520,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
     private function prepare_roles_to_validate ($listofroles) {
         $list = array ();
         foreach($listofroles as $lr =>$role){
-            $list [$lr] = str_replace(' ','',strtolower($role));
+            $list [$lr] = preg_replace('/\s+/','', strtolower($role));
         }
         return $list;
     }

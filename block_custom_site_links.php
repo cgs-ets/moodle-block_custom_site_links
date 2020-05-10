@@ -83,10 +83,11 @@ class block_custom_site_links extends block_base {
      * @return object
      */
     public function get_content() {
-        global $USER, $OUTPUT, $DB;
+        global $USER, $OUTPUT;
         // Determing which user role we are rendering to.
         // This block assumes users have custom profile fields for CampusRoles.
         $userroles = array();
+        require_login();
 
         if (isset($USER->profile['CampusRoles'])) {
             $userroles = explode(',', $USER->profile['CampusRoles']);
@@ -208,6 +209,7 @@ class block_custom_site_links extends block_base {
      * @return boolean
      */
     private function is_allowed($linkroles, $userroles, $linkyears = null , $useryear = null) {
+
         if(is_siteadmin()) {
             return true;
         }
@@ -232,11 +234,10 @@ class block_custom_site_links extends block_base {
         // Do regex checks.
         foreach ($allowed as $reg) {
             $regex = "/${reg}/i";
-
-                // Role = Student but Year level != to the student's year.
+            // Role = Student but Year level != to the student's year.
             if ($isstudent) {
                return  in_array($useryearsstr,$linkyearsarr);
-            }else if ($reg && $reg == "*" || (preg_match($regex, $str) === 1)){
+            }else if ( ($reg && $reg == "*") || (preg_match($regex, $str) === 1)){
                 return true;
             }
         }
