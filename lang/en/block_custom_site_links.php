@@ -52,7 +52,7 @@ $string['validroles'] = 'Early Learning Centre:Staff,Early Learning Centre:Paren
 
 $string['validyears'] = '1,2,3,4,5,6,7,8,9,10,11,12,*';
 $string['errorrole'] = 'Please provide valid role(s)';
-$string['erroryear'] = 'Please provide year(s) between 1 and 12';
+$string['erroryear'] = 'Please provide year(s) between 1 and 12 or *';
 
 $string['headerconfig'] = 'Custom site links roles settting';
 $string['descconfig'] = 'Provide a list of valid roles';
