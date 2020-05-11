@@ -142,6 +142,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_iconlinkdelete']['type'] = PARAM_INT;
 
         $repeatoptions['config_iconlinkorder']['default']  = get_string('arrayno', 'block_custom_site_links');
+        $repeatoptions['config_iconlinkyear']['default'] = '';
 
         $repeatoptions['config_iconlinkimage']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_iconlinklabel']['rule']  = array(get_string('required'), 'required', null, 'server');
@@ -253,6 +254,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $repeatoptions['config_textlinkdelete']['type'] = PARAM_INT;
 
         $repeatoptions['config_textlinkorder']['default']  = get_string('arrayno', 'block_custom_site_links');
+        $repeatoptions['config_textlinkyear']['default'] = '';
 
         $repeatoptions['config_textlinklabel']['rule']  = array(get_string('required'), 'required', null, 'server');
         $repeatoptions['config_textlinkurl']['rule']    = array(get_string('required'), 'required', null, 'server');
@@ -401,6 +403,9 @@ class block_custom_site_links_edit_form extends block_edit_form {
     private function validate_link_audiences($data, $linktype) {
         $errors = array();
 
+        if(!isset($data["config_${linktype}campusroles"])) {
+            return $errors;
+        }
         $linkroles = $this->prepare_roles_to_validate($data["config_${linktype}campusroles"]);
         $config = get_config('block_custom_site_links');
         $availableroles = $this->prepare_roles_to_validate(explode(',', $config->rolesset));
@@ -410,6 +415,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
         foreach ($linkroles as $i => $role) {
             $roles = explode(',', $role);
             foreach ($roles as $lr => $r) {
+
                 if ( $this->validate_wildcard($r) || in_array($r, $availableroles)) {
                     continue;
                 } else {
