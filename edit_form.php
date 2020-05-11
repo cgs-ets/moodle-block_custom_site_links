@@ -407,11 +407,22 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $ro = $this->prepare_roles_to_validate(explode(',', $roleset)); // Roles as is, without *
         $validcombinations = array_unique(array_merge($patterns,$ro));
 
-        if ( (false == strpos($role, '*.')) && (false != strpbrk($role, '.*'))
-            || (false != strpbrk($role, '*') && (false != strpbrk($role, '.*:')))) {
+        if( (false == strpos($role, '*.')) &&  $this->is_valid_pattern($role)){
             return (in_array($role,$validcombinations));
         }
 
+        return false;
+    }
+
+    private function is_valid_pattern($role){
+        $config =  get_config('block_custom_site_links');
+        $patterns = explode(',', $config->patterns);
+
+        foreach($patterns as $i => $pattern ) {
+            if(false != strpbrk($role, strtolower($pattern))){
+                return true;
+            }
+        }
         return false;
     }
 
@@ -424,13 +435,11 @@ class block_custom_site_links_edit_form extends block_edit_form {
     private function get_valid_patterns(){
         $config =  get_config('block_custom_site_links');
         $patterns = explode(',', $config->patterns);
-
-        #var_dump($patterns); exit;
         $roleset = $config->rolesset;
         $validcombination = array();
 
         foreach($patterns as $i=>$pattern) {
-          $validcombination[$i] = $this->get_wildcard_combination(trim($pattern),$roleset);
+          $validcombination[$i] = $this->get_wildcard_combination(trim(strtolower($pattern)),$roleset);
         }
 
         $final_array = $this->nested_to_single_combination($validcombination);
