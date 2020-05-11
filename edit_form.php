@@ -388,9 +388,23 @@ class block_custom_site_links_edit_form extends block_edit_form {
 
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-        $linkroles = $this->prepare_roles_to_validate($data['config_iconlinkcampusroles']);
+
+        $iconlinkerrors = $this->validate_link_audiences($data, 'iconlink');
+        $textlinkerrors = $this->validate_link_audiences($data, 'textlink');
+
+        $errors = array_merge($iconlinkerrors, $textlinkerrors);
+
+        return $errors;
+    }
+
+
+    private function validate_link_audiences($data, $linktype) {
+        $errors = array();
+
+        $linkroles = $this->prepare_roles_to_validate($data["config_${linktype}campusroles"]);
         $config = get_config('block_custom_site_links');
         $availableroles = $this->prepare_roles_to_validate(explode(',', $config->rolesset));
+
 
         // Validate icon links role and years.
         foreach ($linkroles as $i => $role) {
@@ -399,52 +413,22 @@ class block_custom_site_links_edit_form extends block_edit_form {
                 if ( $this->validate_wildcard($r) || in_array($r, $availableroles)) {
                     continue;
                 } else {
-                    $errors["config_iconlinkcampusroles[${i}]"] = get_string('errorrole', 'block_custom_site_links');
+                    $errors["config_${linktype}campusroles[${i}]"] = get_string('errorrole', 'block_custom_site_links');
                 }
             }
         }
 
-        $linkyears = $data['config_iconlinkyear'];
+        $linkyears = $data["config_${linktype}year"];
         $avaliableyears = explode(',', trim($config->years));
 
         foreach ($linkyears as $j => $years) {
             $years = explode(',', $years);
             foreach ($years as $y => $year) {
-                if (!empty($year)) {
-                    if ((in_array($year, $avaliableyears))) {
-                        continue;
-                    }else {
-                        $errors["config_iconlinkyear[${j}]"] = get_string('erroryear', 'block_custom_site_links');
-                    }
-                }
-            }
-        }
-
-        // Validate Text Links roles and years.
-        $linkrolestext = $this->prepare_roles_to_validate($data['config_textlinkcampusroles']);
-
-        foreach ($linkrolestext as $i => $role) {
-            $roles = explode(',', $role);
-            foreach ($roles as $lr => $r) {
-                if ( $this->validate_wildcard($r) || in_array($r, $availableroles)) {
-                    continue;
-                }else {
-                    $errors["config_textlinkcampusroles[${i}]"] = get_string('errorrole', 'block_custom_site_links');
-                }
-            }
-        }
-
-        $textlinkyears = $data['config_textlinkyear'];
-        $avaliableyears = explode(',', trim($config->years));
-
-        foreach ($textlinkyears as $j => $years) {
-            $years = explode(',', $years);
-            foreach ($years as $y => $year) {
-                if (!empty($year)) {
+                if ( !empty($year) && $year != '*') {
                     if ((in_array($year, $avaliableyears))) {
                         continue;
                     } else {
-                        $errors["config_textlinkyear[${j}]"] = get_string('erroryear', 'block_custom_site_links');
+                        $errors["config_${linktype}year[${j}]"] = get_string('erroryear', 'block_custom_site_links');
                     }
                 }
             }
@@ -570,99 +554,20 @@ class block_custom_site_links_edit_form extends block_edit_form {
      * @return boolean
      */
     private function validate_wildcard($role){
-
         if ($role == '*'){
             return true;
         }
         $config = get_config('block_custom_site_links');
-
         $roleset = $config->rolesset;
-        $patterns = $this->get_valid_patterns();
-        $ro = $this->prepare_roles_to_validate(explode(',', $roleset)); // Roles as is, without *.
-        $validcombinations = array_unique(array_merge($patterns,$ro));
+        $regex = "/${role}/i";
 
-        if ((false == strpos($role, '*.')) &&  $this->is_valid_pattern($role)) {
-            return (in_array($role, $validcombinations));
+        if(@preg_match($regex, $roleset) === 1) {
+            return true;
         }
 
         return false;
     }
 
-    private function is_valid_pattern($role){
-        $config = get_config('block_custom_site_links');
-        $patterns = explode(',', $config->patterns);
-
-        foreach ($patterns as $i => $pattern ) {
-            if (false != strpbrk($role, strtolower($pattern))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Helper function.
-     * Returns the possible pattern combinations the
-     * roles field can have.
-     * The possible patterns are defined in the settings of the block.
-     */
-    private function get_valid_patterns(){
-        $config = get_config('block_custom_site_links');
-        $patterns = explode(',', $config->patterns);
-        $roleset = $config->rolesset;
-        $validcombination = array();
-
-        foreach($patterns as $i=>$pattern) {
-          $validcombination[$i] = $this->get_wildcard_combination(trim(strtolower($pattern)), $roleset);
-        }
-
-        $final_array = $this->nested_to_single_combination($validcombination);
-
-        return $final_array;
-    }
-
-    /**
-     * Helper function, receives a multidimensional array and returns
-     * an 1D array.
-     * @param array $validcombination
-     * @return array
-     */
-    private function nested_to_single_combination($validcombination) {
-         $final_array = [];
-
-         foreach ($validcombination as $combination) {
-             if (is_array($combination)) {
-                $final_array = array_merge($final_array, $this->nested_to_single_combination($combination));
-            } else {
-                $final_array [] = $combination;
-            }
-         }
-
-         return $final_array;
-    }
-
-    private function get_wildcard_combination($pattern, $roles) {
-
-        // Prepare the list of roles.
-        // Separates according to the Roles List set on the Edit form.
-        $r = explode(':', $roles);
-        $r = implode(',', $r);
-        $r = explode(',', $r);
-        $final_roles = array_unique($r);
-        $final_roles = $this->prepare_roles_to_validate($final_roles);
-
-        foreach ($final_roles as $i => $j) {
-
-            if (strcmp($j, '*') != 0 && strcmp($j, '.*')!= 0)  {
-                $result [$i] = substr_replace($j, $pattern, 0, 0);
-            } else {
-                $result [$i] = $j;
-            }
-        }
-
-        return $result;
-
-    }
 
     /**
      * Returns a list of roles without white spaces
@@ -670,7 +575,11 @@ class block_custom_site_links_edit_form extends block_edit_form {
      * @param array $listofroles
      * @return array
      */
-    private function prepare_roles_to_validate ($listofroles) {
+    private function prepare_roles_to_validate($listofroles) {
+        if (empty($listofroles)) {
+            return [];
+        }
+
         $list = array ();
         foreach($listofroles as $lr =>$role){
             $list [$lr] = preg_replace('/\s+/','', strtolower($role));

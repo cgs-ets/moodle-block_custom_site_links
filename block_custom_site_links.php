@@ -218,7 +218,7 @@ class block_custom_site_links extends block_base {
         $userrolesstr = implode(',', $userroles);
         $isstudent = false;
 
-        if(!empty($linkyears) && !empty($useryear)) {
+        if($linkyears != "*" && !empty($linkyears) && !empty($useryear)) {
           $linkyearsarr = array_map('trim', explode(',', $linkyears));
           $useryearsstr = implode(',', $useryear);
           $isstudent = true;
