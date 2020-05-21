@@ -391,10 +391,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        //$iconlinkerrors = $this->validate_link_audiences($data, 'iconlink');
-        //$textlinkerrors = $this->validate_link_audiences($data, 'textlink');
+        $iconlinkerrors = $this->validate_link_audiences($data, 'iconlink');
+        $textlinkerrors = $this->validate_link_audiences($data, 'textlink');
 
-        //$errors = array_merge($iconlinkerrors, $textlinkerrors);
+       $errors = array_merge($iconlinkerrors, $textlinkerrors);
 
         return $errors;
     }
@@ -410,10 +410,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         $config = get_config('block_custom_site_links');
         $availableroles = $this->prepare_roles_to_validate(explode(',', $config->rolesset));
 
-
         // Validate icon links role and years.
         foreach ($linkroles as $i => $role) {
             $roles = explode(',', $role);
+
             foreach ($roles as $lr => $r) {
 
                 if ( $this->validate_wildcard($r) || in_array($r, $availableroles)) {
@@ -560,11 +560,12 @@ class block_custom_site_links_edit_form extends block_edit_form {
      * @return boolean
      */
     private function validate_wildcard($role){
+
         if ($role == '*'){
             return true;
         }
-        $config = get_config('block_custom_site_links');
-        $roleset = $config->rolesset;
+        $roleset = get_config('block_custom_site_links')->rolesset;
+
         $regex = "/${role}/i";
 
         if(@preg_match($regex, $roleset) === 1) {
@@ -585,11 +586,12 @@ class block_custom_site_links_edit_form extends block_edit_form {
         if (empty($listofroles)) {
             return [];
         }
-
+     
         $list = array ();
         foreach($listofroles as $lr =>$role){
-            $list [$lr] = preg_replace('/\s+/','', strtolower($role));
+            $list [$lr] = strtolower($role);
         }
+
         return $list;
     }
 }
