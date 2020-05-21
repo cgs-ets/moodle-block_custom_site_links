@@ -391,10 +391,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
-        $iconlinkerrors = $this->validate_link_audiences($data, 'iconlink');
-        $textlinkerrors = $this->validate_link_audiences($data, 'textlink');
+        //$iconlinkerrors = $this->validate_link_audiences($data, 'iconlink');
+        //$textlinkerrors = $this->validate_link_audiences($data, 'textlink');
 
-        $errors = array_merge($iconlinkerrors, $textlinkerrors);
+        //$errors = array_merge($iconlinkerrors, $textlinkerrors);
 
         return $errors;
     }
