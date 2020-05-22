@@ -416,7 +416,7 @@ class block_custom_site_links_edit_form extends block_edit_form {
 
             foreach ($roles as $lr => $r) {
 
-                if ( $this->validate_wildcard($r) || in_array($r, $availableroles)) {
+                if ( $this->validate_wildcard(trim($r)) || in_array(trim($r), $availableroles)) {
                     continue;
                 } else {
                     $errors["config_${linktype}campusroles[${i}]"] = get_string('errorrole', 'block_custom_site_links');
@@ -564,8 +564,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         if ($role == '*'){
             return true;
         }
-        $roleset = get_config('block_custom_site_links')->rolesset;
 
+        $roleset = get_config('block_custom_site_links')->rolesset;
+        $roleset = $this->prepare_roles_to_validate((explode(',', $roleset)));
+        $roleset = implode(',', $roleset);
         $regex = "/${role}/i";
 
         if(@preg_match($regex, $roleset) === 1) {
@@ -586,10 +588,10 @@ class block_custom_site_links_edit_form extends block_edit_form {
         if (empty($listofroles)) {
             return [];
         }
-     
+
         $list = array ();
         foreach($listofroles as $lr =>$role){
-            $list [$lr] = strtolower($role);
+            $list [$lr] = trim(strtolower($role));
         }
 
         return $list;
