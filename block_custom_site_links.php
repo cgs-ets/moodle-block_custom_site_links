@@ -22,6 +22,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+require_once($CFG->dirroot . '/blocks/custom_site_links/lib.php');
 
 /**
  * Block Custom Site Links class definition.
@@ -83,22 +84,7 @@ class block_custom_site_links extends block_base {
      * @return object
      */
     public function get_content() {
-        global $USER, $OUTPUT;
-        // Determing which user role we are rendering to.
-        // This block assumes users have custom profile fields for CampusRoles.
-        $userroles = array();
-        require_login();
-
-        if (isset($USER->profile['CampusRoles'])) {
-            $userroles = explode(',', $USER->profile['CampusRoles']);
-        }
-
-        // Determing which user year we are rendering to.
-        $useryears = array();
-
-        if (!empty($USER->profile['Year'])) {
-            $useryears = explode(',', $USER->profile['Year']);
-        }
+        global $OUTPUT;
 
         // If content has already been generated, don't waste time generating it again.
         if ($this->content !== null) {
@@ -108,87 +94,7 @@ class block_custom_site_links extends block_base {
         $this->content->text = '';
         $this->content->footer = '';
 
-        $iconimages = array();
-        $fs = get_file_storage();
-        $files = $fs->get_area_files($this->context->id, 'block_custom_site_links', 'icons');
-        foreach ($files as $file) {
-            $id = $file->get_contenthash();
-            $filename = $file->get_filename();
-            if ($filename <> '.') {
-                $src = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
-                    $file->get_itemid(), $file->get_filepath(), $filename );
-                $iconimages[] = $src;
-            }
-        }
-
-        $data = [
-            'instanceid' => $this->instance->id,
-            'iconlinks' => array(),
-            'textlinks' => array(),
-            'linktypes' => '',
-            'linknumber' => '',
-        ];
-
-        if (isset($this->config->iconlinkurl)) {
-            foreach ($this->config->iconlinkurl as $i => $url) {
-                if ($url == '') {
-                    continue;
-                }
-
-                 $allowed = $this->is_allowed($this->config->iconlinkcampusroles[$i], $userroles, $this->config->iconlinkyear[$i], $useryears);
-                if ($allowed) {
-
-                    $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
-                    $label = isset($this->config->iconlinklabel[$i]) ? $this->config->iconlinklabel[$i] : '';
-                    $target = ( isset($this->config->iconlinktarget[$i]) && $this->config->iconlinktarget[$i] ) ? '_blank' : '';
-                    $data['iconlinks'][] = [
-                          'icon' => $icon,
-                          'label' => $label,
-                          'url' => $url,
-                          'target' => $target,
-                        ];
-                    }
-            }
-        }
-
-        if (isset($this->config->textlinkurl)) {
-
-            foreach ($this->config->textlinkurl as $i => $url) {
-                if ($url == '') {
-                    continue;
-                }
-
-                $allowed = $this->is_allowed($this->config->textlinkcampusroles[$i], $userroles,$this->config->textlinkyear[$i], $useryears);
-
-                if ($allowed) {
-                    $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
-                    $label = isset($this->config->textlinklabel[$i]) ? $this->config->textlinklabel[$i] : '';
-                    $target = ( isset($this->config->textlinktarget[$i]) && $this->config->textlinktarget[$i] ) ? '_blank' : '';
-                    $data['textlinks'][] = [
-                          'label' => $label,
-                          'url' => $url,
-                          'target' => $target,
-                        ];
-                    }
-
-            }
-        }
-
-        // Determine the type of links this block has to add as a css class later.
-        if (!empty($data['textlinks'])) {
-            if (count($data['textlinks']) < 10) {
-                $data['linknumber'] = 'fewer-than-ten';
-            }
-            if (!empty($data['iconlinks'])) {
-                $data['linktypes'] = 'types-both';
-            } else {
-                $data['linktypes'] = 'types-one types-text';
-            }
-        } else {
-            if (!empty($data['iconlinks'])) {
-                $data['linktypes'] = 'types-one types-icons';
-            }
-        }
+        $data = block_custom_site_links_init($this->instance->id);
 
         // Render links if any.
         if ($data['linktypes'] != '') {
@@ -196,52 +102,5 @@ class block_custom_site_links extends block_base {
         }
 
         return $this->content;
-    }
-
-
-    /**
-     * Check if the user is allowed to see link.
-     *
-     * @param string $linkroles
-     * @param array $userroles
-     * @param string $linkyears
-     * @param array $useryear
-     * @return boolean
-     */
-    private function is_allowed($linkroles, $userroles, $linkyears = null , $useryear = null) {
-
-        if(is_siteadmin()) {
-            return true;
-        }
-
-        $linkrolesarr = array_map('trim', explode(',', $linkroles));
-        $userrolesstr = implode(',', $userroles);
-        $isstudent = false;
-
-        if($linkyears != "*" && !empty($linkyears) && !empty($useryear)) {
-          $linkyearsarr = array_map('trim', explode(',', $linkyears));
-          $useryearsstr = implode(',', $useryear);
-          $isstudent = true;
-        }
-        $allowed =  isset($linkyearsarr) ? array_merge($linkrolesarr,$linkyearsarr) : $linkrolesarr;
-
-        if( !empty($useryearsstr)){
-          $str = $userrolesstr .= ',' . $useryearsstr ;
-        }else{
-           $str = $userrolesstr;
-        }
-
-        // Do regex checks.
-        foreach ($allowed as $reg) {
-            $regex = "/${reg}/i";
-            // Role = Student but Year level != to the student's year.
-            if ($isstudent) {
-               return  in_array($useryearsstr,$linkyearsarr);
-            }else if ( ($reg && $reg == "*") || (preg_match($regex, $str) === 1)){
-                return true;
-            }
-        }
-        return false;
-
     }
 }

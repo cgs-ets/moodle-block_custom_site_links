@@ -94,3 +94,156 @@ function block_custom_site_links_pluginfile($course, $birecordorcm, $context, $f
     // Set the caching time for five days.
     send_stored_file($file, 120 * 60 * 60, 0, $forcedownload, $options);
 }
+
+function block_custom_site_links_init($instanceid) {
+    global $USER, $DB;
+    
+    $blockcontext = CONTEXT_BLOCK::instance($instanceid);
+    $blockrecord = $DB->get_record('block_instances', array('id' => $instanceid), '*');
+    $config = unserialize(base64_decode($blockrecord->configdata));
+
+    $data = [
+        'instanceid' => $instanceid,
+        'iconlinks' => array(),
+        'textlinks' => array(),
+        'linktypes' => '',
+        'linknumber' => '',
+    ];
+
+    profile_load_custom_fields($USER);
+    // Determing which user role we are rendering to.
+    // This block assumes users have custom profile fields for CampusRoles.
+    $userroles = array();
+    if (isset($USER->profile['CampusRoles'])) {
+        $userroles = explode(',', $USER->profile['CampusRoles']);
+    }
+
+    // Determing which user year we are rendering to.
+    $useryears = array();
+    if (!empty($USER->profile['Year'])) {
+        $useryears = explode(',', $USER->profile['Year']);
+    }
+
+    $iconimages = array();
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($blockcontext->id, 'block_custom_site_links', 'icons');
+    foreach ($files as $file) {
+        $id = $file->get_contenthash();
+        $filename = $file->get_filename();
+        if ($filename <> '.') {
+            $src = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
+                $file->get_itemid(), $file->get_filepath(), $filename );
+            $iconimages[] = $src;
+        }
+    }
+
+    if (isset($config->iconlinkurl)) {
+        foreach ($config->iconlinkurl as $i => $url) {
+            if ($url == '') {
+                continue;
+            }
+
+             $allowed = block_custom_site_links_is_allowed($config->iconlinkcampusroles[$i], $userroles, $config->iconlinkyear[$i], $useryears);
+            if ($allowed) {
+
+                $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                $label = isset($config->iconlinklabel[$i]) ? $config->iconlinklabel[$i] : '';
+                $target = ( isset($config->iconlinktarget[$i]) && $config->iconlinktarget[$i] ) ? '_blank' : '';
+                $data['iconlinks'][] = [
+                      'icon' => $icon,
+                      'label' => $label,
+                      'url' => $url,
+                      'target' => $target,
+                    ];
+                }
+        }
+    }
+
+    if (isset($config->textlinkurl)) {
+
+        foreach ($config->textlinkurl as $i => $url) {
+            if ($url == '') {
+                continue;
+            }
+
+            $allowed = block_custom_site_links_is_allowed($config->textlinkcampusroles[$i], $userroles, $config->textlinkyear[$i], $useryears);
+
+            if ($allowed) {
+                $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                $label = isset($config->textlinklabel[$i]) ? $config->textlinklabel[$i] : '';
+                $target = ( isset($config->textlinktarget[$i]) && $config->textlinktarget[$i] ) ? '_blank' : '';
+                $data['textlinks'][] = [
+                      'label' => $label,
+                      'url' => $url,
+                      'target' => $target,
+                    ];
+                }
+
+        }
+    }
+
+    // Determine the type of links this block has to add as a css class later.
+    if (!empty($data['textlinks'])) {
+        if (count($data['textlinks']) < 10) {
+            $data['linknumber'] = 'fewer-than-ten';
+        }
+        if (!empty($data['iconlinks'])) {
+            $data['linktypes'] = 'types-both';
+        } else {
+            $data['linktypes'] = 'types-one types-text';
+        }
+    } else {
+        if (!empty($data['iconlinks'])) {
+            $data['linktypes'] = 'types-one types-icons';
+        }
+    }
+
+    return $data;
+
+}
+
+/**
+ * Check if the user is allowed to see link.
+ *
+ * @param string $linkroles
+ * @param array $userroles
+ * @param string $linkyears
+ * @param array $useryear
+ * @return boolean
+ */
+function block_custom_site_links_is_allowed($linkroles, $userroles, $linkyears = null , $useryear = null) {
+
+    if(is_siteadmin()) {
+        return true;
+    }
+
+    $linkrolesarr = array_map('trim', explode(',', $linkroles));
+    $userrolesstr = implode(',', $userroles);
+    $isstudent = false;
+
+    if($linkyears != "*" && !empty($linkyears) && !empty($useryear)) {
+      $linkyearsarr = array_map('trim', explode(',', $linkyears));
+      $useryearsstr = implode(',', $useryear);
+      $isstudent = true;
+    }
+    $allowed =  isset($linkyearsarr) ? array_merge($linkrolesarr,$linkyearsarr) : $linkrolesarr;
+
+    if( !empty($useryearsstr)){
+      $str = $userrolesstr .= ',' . $useryearsstr ;
+    }else{
+       $str = $userrolesstr;
+    }
+
+    // Do regex checks.
+    foreach ($allowed as $reg) {
+        $regex = "/${reg}/i";
+        // Role = Student but Year level != to the student's year.
+        if ($isstudent) {
+           return  in_array($useryearsstr,$linkyearsarr);
+        }else if ( ($reg && $reg == "*") || (preg_match($regex, $str) === 1)){
+            return true;
+        }
+    }
+    return false;
+
+}
