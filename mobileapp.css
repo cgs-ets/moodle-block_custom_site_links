@@ -1,0 +1,104 @@
+.block_custom_site_links .card-title {
+    display: none;
+}
+.block_custom_site_links .iconcolumn {
+    text-transform: uppercase;
+    width: 100%;
+}
+.block_custom_site_links .textlinks {
+    width: 100%;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+    columns: 2;
+    padding-left: 1rem;
+}
+.block_custom_site_links .textlinks ul {
+    margin: 0;
+    padding: 0 5px;
+}
+.block_custom_site_links ul li {
+    list-style: none;
+}
+.block_custom_site_links .iconcolumn .icon-button-grid > li {
+    display: inline-block;
+    width: 100px;
+    margin: 0 -1px -1px 0;
+}
+.block_custom_site_links .icon-button-grid {
+    font-size: 9px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0 0 3px 0;
+    text-align: center;
+}
+.block_custom_site_links .icon-button-grid a,
+.block_custom_site_links .icon-button-grid a:focus,
+.block_custom_site_links .icon-button-grid a:visited {
+    border: 0 none;
+    display: block;
+    outline: 0 none;
+    text-decoration: none;
+    transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+}
+.block_custom_site_links .icon-button-grid a:hover {
+    border: 0 none;
+    background-color: #78b8e0;
+    outline: 0 none;
+    text-decoration: none;
+}
+.block_custom_site_links .icon-button-grid a:hover .button-text {
+    color: #fefefe;
+}
+.block_custom_site_links .icon-button-grid a .btnicon {
+    display: inline-block;
+    margin: 20px 0 0;
+    height: 60px;
+    width: 60px;
+    padding: 0;
+}
+.block_custom_site_links .icon-button-grid a .button-text {
+    border: 0 none;
+    color: #232323;
+    display: block;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    padding: 5px 7px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.block_custom_site_links.types-one .iconcolumn {
+    border: 0 none;
+}
+.block_custom_site_links.types-one .textlinks {
+    border: 0 none;
+}
+.block_custom_site_links.types-both.fewer-than-ten .textlinks {
+    column-count: 3;
+    width: 100%;
+    column-width: 200px;
+}
+.block_custom_site_links.types-both.fewer-than-ten .iconcolumn {
+    width: 100%;
+}
+.block_custom_site_links.types-one.types-icons .textlinks {
+    display: none;
+}
+.block_custom_site_links.types-one.types-icons .iconcolumn {
+    width: 100%;
+    border-right: 0 none;
+    padding-right: 0;
+}
+.block_custom_site_links.types-one.types-text .iconcolumn {
+    display: none;
+}
+.block_custom_site_links.types-one.types-text .textlinks {
+    width: 100%;
+}

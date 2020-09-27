@@ -23,6 +23,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->libdir.'/filelib.php');
+
 /**
  * Serves the plugin attachments.
  *
@@ -125,6 +128,7 @@ function block_custom_site_links_init($instanceid) {
     }
 
     $iconimages = array();
+    $iconimagestokenised = array();
     $fs = get_file_storage();
     $files = $fs->get_area_files($blockcontext->id, 'block_custom_site_links', 'icons');
     foreach ($files as $file) {
@@ -133,7 +137,10 @@ function block_custom_site_links_init($instanceid) {
         if ($filename <> '.') {
             $src = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
                 $file->get_itemid(), $file->get_filepath(), $filename );
-            $iconimages[] = $src;
+            $iconimages[] = $src->out();
+            $src = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(),
+                $file->get_itemid(), $file->get_filepath(), $filename, false, true);
+            $iconimagestokenised[] = $src->out();
         }
     }
 
@@ -143,19 +150,20 @@ function block_custom_site_links_init($instanceid) {
                 continue;
             }
 
-             $allowed = block_custom_site_links_is_allowed($config->iconlinkcampusroles[$i], $userroles, $config->iconlinkyear[$i], $useryears);
+            $allowed = block_custom_site_links_is_allowed($config->iconlinkcampusroles[$i], $userroles, $config->iconlinkyear[$i], $useryears);
             if ($allowed) {
-
                 $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
+                $icontok = isset($iconimagestokenised[$i]) ? $iconimagestokenised[$i] : '';
                 $label = isset($config->iconlinklabel[$i]) ? $config->iconlinklabel[$i] : '';
                 $target = ( isset($config->iconlinktarget[$i]) && $config->iconlinktarget[$i] ) ? '_blank' : '';
                 $data['iconlinks'][] = [
-                      'icon' => $icon,
-                      'label' => $label,
-                      'url' => $url,
-                      'target' => $target,
-                    ];
-                }
+                    'icon' => $icon,
+                    'icontok' => $icontok,
+                    'label' => $label,
+                    'url' => $url,
+                    'target' => $target,
+                ];
+            }
         }
     }
 
@@ -173,12 +181,11 @@ function block_custom_site_links_init($instanceid) {
                 $label = isset($config->textlinklabel[$i]) ? $config->textlinklabel[$i] : '';
                 $target = ( isset($config->textlinktarget[$i]) && $config->textlinktarget[$i] ) ? '_blank' : '';
                 $data['textlinks'][] = [
-                      'label' => $label,
-                      'url' => $url,
-                      'target' => $target,
-                    ];
-                }
-
+                    'label' => $label,
+                    'url' => $url,
+                    'target' => $target,
+                ];
+            }
         }
     }
 
@@ -199,7 +206,6 @@ function block_custom_site_links_init($instanceid) {
     }
 
     return $data;
-
 }
 
 /**
@@ -212,7 +218,6 @@ function block_custom_site_links_init($instanceid) {
  * @return boolean
  */
 function block_custom_site_links_is_allowed($linkroles, $userroles, $linkyears = null , $useryear = null) {
-
     if(is_siteadmin()) {
         return true;
     }
@@ -244,6 +249,6 @@ function block_custom_site_links_is_allowed($linkroles, $userroles, $linkyears =
             return true;
         }
     }
-    return false;
 
+    return false;
 }

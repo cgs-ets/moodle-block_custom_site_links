@@ -22,6 +22,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/blocks/custom_site_links/lib.php');
 
 /**
