@@ -1,3 +1,6 @@
+.block_custom_site_links {
+    margin-bottom: 25px;
+}
 .block_custom_site_links .card-title {
     display: none;
 }
