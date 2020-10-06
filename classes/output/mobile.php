@@ -53,7 +53,7 @@ class mobile {
         }
 
         $OUTPUT = $PAGE->get_renderer('core');
-        $data = block_custom_site_links_init($blockinstanceid);
+        $data = block_custom_site_links_init($blockinstanceid, array('mobile'));
 
         // Render the initial html.
         $html = $OUTPUT->render_from_template('block_custom_site_links/mobile', $data);

@@ -98,9 +98,14 @@ function block_custom_site_links_pluginfile($course, $birecordorcm, $context, $f
     send_stored_file($file, 120 * 60 * 60, 0, $forcedownload, $options);
 }
 
-function block_custom_site_links_init($instanceid) {
+function block_custom_site_links_init($instanceid, $platforms = null) {
     global $USER, $DB;
     
+    // Default platform is web.
+    if (empty($platforms)) {
+        $platforms = array('web');
+    }
+
     $blockcontext = CONTEXT_BLOCK::instance($instanceid);
     $blockrecord = $DB->get_record('block_instances', array('id' => $instanceid), '*');
     $config = unserialize(base64_decode($blockrecord->configdata));
@@ -150,6 +155,10 @@ function block_custom_site_links_init($instanceid) {
                 continue;
             }
 
+            if ( ! array_intersect($platforms, $config->iconlinkplatforms[$i])) {
+                continue;
+            }
+
             $allowed = block_custom_site_links_is_allowed($config->iconlinkcampusroles[$i], $userroles, $config->iconlinkyear[$i], $useryears);
             if ($allowed) {
                 $icon = isset($iconimages[$i]) ? $iconimages[$i] : '';
@@ -171,6 +180,10 @@ function block_custom_site_links_init($instanceid) {
 
         foreach ($config->textlinkurl as $i => $url) {
             if ($url == '') {
+                continue;
+            }
+
+            if ( ! array_intersect($platforms, $config->textlinkplatforms[$i])) {
                 continue;
             }
 

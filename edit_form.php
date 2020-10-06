@@ -45,9 +45,9 @@
          */
         protected function specific_definition($mform) {
 
-            /*             * *********************
+            /*************************
              * ICON LINKS
-             * ********************** */
+             * ***********************/
             $mform->addElement('header', 'configheader', get_string('iconlinksheader', 'block_custom_site_links'));
             $mform->addElement('static', 'rolesdesc', '', get_string('roles_desc', 'block_custom_site_links'));
 
@@ -110,6 +110,16 @@
             $options = array('size' => '10');
             $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
+            $type = 'select';
+            $name = 'config_iconlinkplatforms';
+            $label = get_string('platforms', 'block_custom_site_links');
+            $desc = get_string('platformsdesc', 'block_custom_site_links');
+            $options = array('web' => 'web', 'mobile' => 'mobile');
+            $attributes = array('size' => 2); 
+            $element = &$mform->createElement($type, $name, $label, $options, $attributes);
+            $element->setMultiple(true);
+            $repeatarray[] = $element;
+
             $type = 'advcheckbox';
             $name = 'config_iconlinkdelete';
             $label = get_string('delete');
@@ -139,10 +149,10 @@
             $repeatoptions['config_iconlinkcampusroles']['type'] = PARAM_TEXT;
             $repeatoptions['config_iconlinkyear']['type'] = PARAM_TEXT;
             $repeatoptions['config_iconlinkorder']['type'] = PARAM_INT;
+            $repeatoptions['config_iconlinkplatforms']['type'] = PARAM_TEXT;
             $repeatoptions['config_iconlinkdelete']['type'] = PARAM_INT;
 
             $repeatoptions['config_iconlinkorder']['default'] = get_string('arrayno', 'block_custom_site_links');
-            // $repeatoptions['config_iconlinkyear']['default'] = '';
 
             $repeatoptions['config_iconlinkimage']['rule'] = array(get_string('required'), 'required', null, 'server');
             $repeatoptions['config_iconlinklabel']['rule'] = array(get_string('required'), 'required', null, 'server');
@@ -158,15 +168,16 @@
             $repeatoptions['config_iconlinkcampusroles']['disabledif'] = array('config_iconlinkdelete', 'checked');
             $repeatoptions['config_iconlinkyear']['disabledif'] = array('config_iconlinkdelete', 'checked');
             $repeatoptions['config_iconlinkorder']['disabledif'] = array('config_iconlinkdelete', 'checked');
+            $repeatoptions['config_iconlinkplatforms']['disabledif'] = array('config_iconlinkdelete', 'checked');
 
             $repeatoptions['config_iconlinkorder']['hideif'] = array('config_sorticonlinksalpha', 'checked');
 
             $this->repeat_elements($repeatarray, $repeatcount, $repeatoptions, 'iconlink_repeats', 'iconlink_add_fields',
                 1, get_string('addnewiconlink', 'block_custom_site_links'), true);
 
-            /*             * *********************
+            /*************************
              * TEXT LINKS
-             * ********************** */
+             * ***********************/
             $mform->addElement('header', 'configheader', get_string('textlinksheader', 'block_custom_site_links'));
 
             $type = 'advcheckbox';
@@ -222,6 +233,16 @@
             $options = array('size' => '10');
             $repeatarray[] = &$mform->createElement($type, $name, $label, $options);
 
+            $type = 'select';
+            $name = 'config_textlinkplatforms';
+            $label = get_string('platforms', 'block_custom_site_links');
+            $desc = get_string('platformsdesc', 'block_custom_site_links');
+            $options = array('web', 'mobile');
+            $attributes = array('size' => 2); 
+            $element = &$mform->createElement($type, $name, $label, $options, $attributes);
+            $element->setMultiple(true);
+            $repeatarray[] = $element;
+
             $type = 'advcheckbox';
             $name = 'config_textlinkdelete';
             $label = get_string('delete');
@@ -252,9 +273,9 @@
             $repeatoptions['config_textlinkyear']['type'] = PARAM_TEXT;
             $repeatoptions['config_textlinkorder']['type'] = PARAM_INT;
             $repeatoptions['config_textlinkdelete']['type'] = PARAM_INT;
+            $repeatoptions['config_textlinkplatforms']['type'] = PARAM_TEXT;
 
             $repeatoptions['config_textlinkorder']['default'] = get_string('arrayno', 'block_custom_site_links');
-            //$repeatoptions['config_textlinkyear']['default'] = '';
 
             $repeatoptions['config_textlinklabel']['rule'] = array(get_string('required'), 'required', null, 'server');
             $repeatoptions['config_textlinkurl']['rule'] = array(get_string('required'), 'required', null, 'server');
@@ -268,6 +289,7 @@
             $repeatoptions['config_textlinkcampusroles']['disabledif'] = array('config_textlinkdelete', 'checked');
             $repeatoptions['config_textlinkyear']['disabledif'] = array('config_textlinkyear', 'checked');
             $repeatoptions['config_textlinkorder']['disabledif'] = array('config_textlinkdelete', 'checked');
+            $repeatoptions['config_textlinkplatforms']['disabledif'] = array('config_textlinkdelete', 'checked');
 
             $repeatoptions['config_textlinkorder']['hideif'] = array('config_sorttextlinksalpha', 'checked');
 
@@ -295,6 +317,7 @@
                             $this->delete_array_element($data->config_iconlinktarget, $i);
                             $this->delete_array_element($data->config_iconlinkcampusroles, $i);
                             $this->delete_array_element($data->config_iconlinkorder, $i);
+                            $this->delete_array_element($data->config_iconlinkplatforms, $i);
                         }
                     }
                     // Dont need delete array anymore.
@@ -308,6 +331,7 @@
                     $data->config_iconlinktarget = array_values($data->config_iconlinktarget);
                     $data->config_iconlinkcampusroles = array_values($data->config_iconlinkcampusroles);
                     $data->config_iconlinkorder = array_values($data->config_iconlinkorder);
+                    $data->config_iconlinkplatforms = array_values($data->config_iconlinkplatforms);
                 }
 
                 // Remove deleted text links before saving data.
@@ -321,6 +345,7 @@
                             $this->delete_array_element($data->config_textlinkcampusroles, $i);
                             $this->delete_array_element($data->config_textlinkyear, $i);
                             $this->delete_array_element($data->config_textlinkorder, $i);
+                            $this->delete_array_element($data->config_textlinkplatforms, $i);
                         }
                     }
                     // Dont need delete array anymore.
@@ -333,6 +358,7 @@
                     $data->config_textlinktarget = array_values($data->config_textlinktarget);
                     $data->config_textlinkcampusroles = array_values($data->config_textlinkcampusroles);
                     $data->config_textlinkorder = array_values($data->config_textlinkorder);
+                    $data->config_textlinkplatforms = array_values($data->config_textlinkplatforms);
                 }
 
                 // Reordering icon links.
@@ -354,6 +380,7 @@
                     $this->reorder_by_array($data->config_iconlinktarget, $order);
                     $this->reorder_by_array($data->config_iconlinkcampusroles, $order);
                     $this->reorder_by_array($data->config_iconlinkorder, $order);
+                    $this->reorder_by_array($data->config_iconlinkplatforms, $order);
                 }
 
                 // Reordering text links.
@@ -374,6 +401,7 @@
                     $this->reorder_by_array($data->config_textlinktarget, $order);
                     $this->reorder_by_array($data->config_textlinkcampusroles, $order);
                     $this->reorder_by_array($data->config_textlinkorder, $order);
+                    $this->reorder_by_array($data->config_textlinkplatforms, $order);
                 }
 
                 // Save images.

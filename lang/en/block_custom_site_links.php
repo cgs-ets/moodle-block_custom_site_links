@@ -34,6 +34,7 @@ $string['addnewiconlink'] = '+ add more';
 $string['addnewtextlink'] = '+ add more';
 $string['icon'] = 'Icon';
 $string['label'] = 'Label';
+$string['platforms'] = 'Platforms';
 $string['delete'] = 'Delete';
 $string['deletedesc'] = 'Delete this link';
 $string['roles'] = 'Roles';
