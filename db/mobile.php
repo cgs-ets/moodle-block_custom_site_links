@@ -31,8 +31,8 @@ $addons = array(
                     'class' => 'block_custom_site_links'
                 ),
                 'styles' => [
-                    'url' => $CFG->wwwroot . '/blocks/custom_site_links/mobileapp.css?v=2020092400',
-                    'version' => 2020092400
+                    'url' => $CFG->wwwroot . '/blocks/custom_site_links/mobileapp.css?v=2020092402',
+                    'version' => 2020092402
                 ],
                 'delegate' => 'CoreBlockDelegate', // Delegate (where to display the link to the add-on)
                 'method' => 'mobile_course_view', // Main function in \block_custom_site_links\output\mobile
