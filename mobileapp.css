@@ -1,5 +1,13 @@
-.block_custom_site_links {
+core-block > .block_custom_site_links {
     margin-bottom: 25px;
+}
+core-block > .block_custom_site_links {
+    background-color: #fff;
+    margin: 0 10px 25px;
+    border-radius: 2px;
+    border: 1px solid #e4e6e8;
+    padding: 10px 0 20px;
+    box-shadow: 2px 2px 2px 0px #e4e6e8;
 }
 .block_custom_site_links .card-title {
     display: none;
