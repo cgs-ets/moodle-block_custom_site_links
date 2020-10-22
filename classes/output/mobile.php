@@ -56,7 +56,7 @@ class mobile {
         $data = block_custom_site_links_init($blockinstanceid, array('mobile'));
 
         // Render the initial html.
-        $html = '';
+        $html = '<div class="no-content"></div>';
         if ($data['linktypes'] != '') {
             $html = $OUTPUT->render_from_template('block_custom_site_links/mobile', $data);
         }
