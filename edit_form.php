@@ -113,9 +113,9 @@
             $type = 'select';
             $name = 'config_iconlinkplatforms';
             $label = get_string('platforms', 'block_custom_site_links');
-            $desc = get_string('platformsdesc', 'block_custom_site_links');
+            #$desc = get_string('platformsdesc', 'block_custom_site_links');
             $options = array('web' => 'web', 'mobile' => 'mobile');
-            $attributes = array('size' => 2); 
+            $attributes = array('size' => 2);
             $element = &$mform->createElement($type, $name, $label, $options, $attributes);
             $element->setMultiple(true);
             $repeatarray[] = $element;
@@ -236,9 +236,9 @@
             $type = 'select';
             $name = 'config_textlinkplatforms';
             $label = get_string('platforms', 'block_custom_site_links');
-            $desc = get_string('platformsdesc', 'block_custom_site_links');
+            #$desc = get_string('platformsdesc', 'block_custom_site_links');
             $options = array('web' => 'web', 'mobile' => 'mobile');
-            $attributes = array('size' => 2); 
+            $attributes = array('size' => 2);
             $element = &$mform->createElement($type, $name, $label, $options, $attributes);
             $element->setMultiple(true);
             $repeatarray[] = $element;

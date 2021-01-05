@@ -100,7 +100,7 @@ function block_custom_site_links_pluginfile($course, $birecordorcm, $context, $f
 
 function block_custom_site_links_init($instanceid, $platforms = null) {
     global $USER, $DB;
-    
+
     // Default platform is web.
     if (empty($platforms)) {
         $platforms = array('web');
