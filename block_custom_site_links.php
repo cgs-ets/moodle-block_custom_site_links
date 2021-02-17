@@ -96,7 +96,7 @@ class block_custom_site_links extends block_base {
         $this->content->footer = '';
 
         $data = block_custom_site_links_init($this->instance->id);
-
+        
         // Render links if any.
         if ($data['linktypes'] != '') {
             $this->content->text = $OUTPUT->render_from_template('block_custom_site_links/content', $data);
