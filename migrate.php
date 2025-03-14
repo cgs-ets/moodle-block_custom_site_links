@@ -1,5 +1,10 @@
 <?php
 require_once('../../config.php');
+
+if (!has_capability('moodle/site:config', \context_system::instance())) {
+    throw new \Exception('You do not have permission to add links');
+}
+
 $instanceid = required_param('id', PARAM_RAW);
 $blockcontext = CONTEXT_BLOCK::instance($instanceid);
 $blockrecord = $DB->get_record('block_instances', array('id' => $instanceid), '*');
