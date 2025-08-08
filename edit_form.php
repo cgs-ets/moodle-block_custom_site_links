@@ -236,7 +236,6 @@
             $type = 'select';
             $name = 'config_textlinkplatforms';
             $label = get_string('platforms', 'block_custom_site_links');
-            #$desc = get_string('platformsdesc', 'block_custom_site_links');
             $options = array('web' => 'web', 'mobile' => 'mobile');
             $attributes = array('size' => 2);
             $element = &$mform->createElement($type, $name, $label, $options, $attributes);
@@ -303,6 +302,7 @@
          * @return object submitted data.
          */
         public function get_data() {
+            global $USER;
             $data = parent::get_data();
 
             if ($data) {
@@ -411,6 +411,15 @@
                             'icons', $i);
                     }
                 }
+
+                // After saving files, clean up draft areas
+                if (!empty($data->config_iconlinkimage)) {
+                    $fs = get_file_storage();
+                    $usercontext = context_user::instance($USER->id);
+                    foreach ($data->config_iconlinkimage as $draftitemid) {
+                        $fs->delete_area_files($usercontext->id, 'user', 'draft', $draftitemid);
+                    }
+                }
             }
 
             return $data;
@@ -477,23 +486,21 @@
          * @return void
          */
         public function set_data($defaults) {
+            global $USER;
             if (isset($this->block->config->iconlinkimage)) {
                 foreach ($this->block->config->iconlinkimage as $i => $draftitemid) {
-                    $newdraftitemid = ''; // Empty string force creates a new area and copy existing files into.
-                    // Fetch the draft file areas. On initial load this is empty and new draft areas are created.
-                    // On subsequent loads the draft areas are retreived.
-                    if (isset($_REQUEST['config_iconlinkimage'][$i])) {
-                        $newdraftitemid = $_REQUEST['config_iconlinkimage'][$i];
+                    // Clean up any existing draft area first
+                    if (!empty($draftitemid)) {
+                        $fs = get_file_storage();
+                        $fs->delete_area_files(context_user::instance($USER->id)->id, 'user', 'draft', $draftitemid);
                     }
-
-                    // Copy all the files from the 'real' area, into the draft areas.
+                    
+                    $newdraftitemid = file_get_submitted_draft_itemid("config_iconlinkimage[$i]");
                     file_prepare_draft_area($newdraftitemid, $this->block->context->id, 'block_custom_site_links',
                         'icons', $i, array('subdirs' => true));
                     $this->block->config->iconlinkimage[$i] = $newdraftitemid;
                 }
             }
-
-            // Set form data.
             parent::set_data($defaults);
         }
 
