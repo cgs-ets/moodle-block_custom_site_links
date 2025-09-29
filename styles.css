@@ -1,8 +1,8 @@
 .block_custom_site_links .card-title {
-    display: none;
+    display: none !important;
 }
 .block_custom_site_links.block_with_controls .card-title {
-    display: block;
+    display: block !important;
 }
 .block_custom_site_links .iconcolumn {
     text-transform: uppercase;

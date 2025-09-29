@@ -254,7 +254,7 @@ function block_custom_site_links_is_allowed($linkroles, $userroles, $linkyears =
 
     // Do regex checks.
     foreach ($allowed as $reg) {
-        $regex = "/${reg}/i";
+        $regex = "/{$reg}/i";
         // Role = Student but Year level != to the student's year.
         if ($isstudent) {
            return  in_array($useryearsstr,$linkyearsarr);
